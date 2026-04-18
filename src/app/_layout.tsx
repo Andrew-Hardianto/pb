@@ -1,16 +1,23 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import React from 'react';
-import { useColorScheme } from 'react-native';
+import { useFonts } from "expo-font";
+import { SplashScreen, Stack } from 'expo-router';
+import React, { useEffect } from 'react';
 
-import { AnimatedSplashOverlay } from '@/components/animated-icon';
-import AppTabs from '@/components/app-tabs';
+export default function RootLayout() {
 
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
-  return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <AnimatedSplashOverlay />
-      <AppTabs />
-    </ThemeProvider>
-  );
+  const [fontsLoaded] = useFonts({
+    'sans-regular': require('../assets/fonts/DMSans-Regular.ttf'),
+    'sans-bold': require('../assets/fonts/DMSans-Bold.ttf'),
+    'sans-medium': require('../assets/fonts/DMSans-Medium.ttf'),
+    'sans-extrabold': require('../assets/fonts/DMSans-ExtraBold.ttf'),
+  })
+
+  useEffect(() => {
+    if (fontsLoaded) {
+      SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded]);
+
+  if (!fontsLoaded) return null;
+
+  return <Stack screenOptions={{ headerShown: false }} />;
 }

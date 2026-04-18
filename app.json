@@ -34,6 +34,17 @@
             "imageWidth": 76
           }
         }
+      ],
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "./assets/fonts/DMSans-Regular.ttf",
+            "./assets/fonts/DMSans-Bold.ttf",
+            "./assets/fonts/DMSans-Medium.ttf",
+            "./assets/fonts/DMSans-ExtraBold.ttf"
+          ]
+        }
       ]
     ],
     "experiments": {
