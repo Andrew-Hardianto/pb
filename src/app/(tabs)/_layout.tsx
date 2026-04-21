@@ -4,21 +4,30 @@ import React from 'react';
 import { Image, View } from 'react-native';
 
 interface TabIconProps {
-  icon: string;
+  icon: any;
   focused: boolean;
   color: string;
   size: number;
 }
 
-const TabIcon = ({ focused, icon }: TabIconProps) => {
+const TabIcon = ({ icon: Icon, focused, size = 24 }: TabIconProps) => {
+  const isSvgComponent = typeof Icon === "function";
+
   return (
     <View>
-      <View>
-        <Image source={require(icon)} resizeMode="contain" />
-      </View>
+      {isSvgComponent ? (
+        <Icon width={size} height={size} />
+      ) : (
+        <Image
+          source={Icon}
+          style={{ width: size, height: size }}
+          resizeMode="contain"
+        />
+      )}
     </View>
   );
 };
+
 const TabLayout = () => {
   // const { isSignedIn, isLoaded } = useAuth();
 
@@ -34,6 +43,7 @@ const TabLayout = () => {
 
   return (
     <Tabs
+      initialRouteName="index"
       screenOptions={{
         headerShown: false,
         tabBarShowLabel: false,
@@ -43,7 +53,7 @@ const TabLayout = () => {
           // height: tabBar.height,
           // marginHorizontal: tabBar.horizontalInset,
           // borderRadius: tabBar.radius,
-          // backgroundColor: colors.primary,
+          backgroundColor: "#F1F1",
           borderTopWidth: 0,
           elevation: 0,
         },
