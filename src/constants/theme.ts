@@ -8,20 +8,44 @@ import '@/global.css';
 import { Platform } from 'react-native';
 
 export const Colors = {
-  light: {
+  primary: '#19253F',
+  secondary: '#006CD8',
+  tertiary: '#6100D8',
+  success: '#00A226',
+  warning: '#D88500',
+  danger: '#ED1B24',
+  light: '#E2E8F0',
+  medium: '#646464',
+  dark: '#121212',
+  pink: '#FFE8E9',
+  textBold: {
+    fonsSize: 14,
+    fontWeight: 600,
+    lineHeight: 21
+  },
+  textRegular: {
+    fonsSize: 14,
+    fontWeight: 400,
+    lineHeight: 18
+  },
+
+  lightTheme: {
     text: '#000000',
     background: '#ffffff',
     backgroundElement: '#F0F0F3',
     backgroundSelected: '#E0E1E6',
     textSecondary: '#60646C',
   },
-  dark: {
+  darkTheme: {
     text: '#ffffff',
     background: '#000000',
     backgroundElement: '#212225',
     backgroundSelected: '#2E3135',
     textSecondary: '#B0B4BA',
   },
+
+
+
 } as const;
 
 export type ThemeColor = keyof typeof Colors.light & keyof typeof Colors.dark;

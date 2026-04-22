@@ -1,10 +1,11 @@
+import HomeHeader from '@/components/organisms/HeaderHome';
 import React from 'react';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 
 function HomeScreen() {
     return (
         <View>
-            <Text>Home</Text>
+            <HomeHeader />
         </View>
     )
 }

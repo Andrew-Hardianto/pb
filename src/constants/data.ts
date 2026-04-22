@@ -1,11 +1,10 @@
-import { ImageSourcePropType } from "react-native";
 import { SvgProps } from "react-native-svg";
 import { icons } from "./icons";
 
 interface AppTab {
     name: string;
     title: string;
-    icon: ImageSourcePropType | React.FC<SvgProps>; // depends on how you handle SVG
+    icon: React.FC<SvgProps>; // depends on how you handle SVG
 }
 
 export const tabs: AppTab[] = [
