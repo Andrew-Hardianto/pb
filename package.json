@@ -5,10 +5,19 @@
   "scripts": {
     "start": "expo start",
     "reset-project": "node ./scripts/reset-project.js",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
     "web": "expo start --web",
-    "lint": "expo lint"
+    "lint": "expo lint",
+    "prebuild": "expo prebuild",
+    "prebuild:clean": "expo prebuild --clean",
+    "android:apk": "cd android && ./gradlew app:assembleRelease",
+    "android:aab": "cd android && ./gradlew app:bundleRelease",
+    "android:clean": "cd android && ./gradlew clean",
+    "android:apk:debug": "cd android && ./gradlew app:assembleDebug",
+    "ios:build": "xed ios",
+    "ios:archive": "xcodebuild -workspace ios/PacificBike.xcworkspace -scheme PacificBike -configuration Release archive -archivePath ios/build/PacificBike.xcarchive",
+    "ios:clean": "xcodebuild -workspace ios/PacificBike.xcworkspace -scheme PacificBike clean"
   },
   "dependencies": {
     "@react-navigation/bottom-tabs": "^7.15.5",
