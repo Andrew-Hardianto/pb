@@ -15,7 +15,7 @@ export function usePost<TData = any, TVariables = any>(
     urlApi: string,
     options?: UsePostOptions<TData, TVariables>
 ) {
-    return useMutation<TData, any, TVariables>({
+    const mutation = useMutation<TData, any, TVariables>({
         mutationFn: (variables) => postUrlApi<TData>(urlApi, variables),
         onSuccess: options?.onSuccess,
         onError: (error) => {
@@ -24,4 +24,9 @@ export function usePost<TData = any, TVariables = any>(
         },
         ...options?.mutationOptions,
     });
+
+    return {
+        ...mutation,
+        loading: mutation.isPending
+    };
 }

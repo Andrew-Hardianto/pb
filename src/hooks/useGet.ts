@@ -6,9 +6,14 @@ export function useGet<TData = any>(
     urlApi: string,
     options?: Omit<UseQueryOptions<TData>, 'queryKey' | 'queryFn'>
 ) {
-    return useQuery<TData>({
+    const mutation = useQuery<TData>({
         queryKey,
         queryFn: () => getUrlApi<TData>(urlApi),
         ...options,
     });
+
+    return {
+        ...mutation,
+        loading: mutation.isPending
+    };
 }

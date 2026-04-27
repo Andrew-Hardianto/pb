@@ -9,12 +9,17 @@ export function useDelete<TData = any>(
         onError?: (error: any) => void;
     }
 ) {
-    return useMutation<TData, any, void>({
+    const mutation = useMutation<TData, any, void>({
         mutationFn: () => deleteUrlApi<TData>(urlApi),
         onSuccess: options?.onSuccess,
         onError: (error) => {
             handleHttpError(error);
             options?.onError?.(error);
-        },
+        }
     });
+
+    return {
+        ...mutation,
+        loading: mutation.isPending
+    };
 }
