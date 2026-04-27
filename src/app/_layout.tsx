@@ -1,3 +1,5 @@
+import { queryClient } from '@/lib/queryClient';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from 'expo-router';
 import React, { useEffect } from 'react';
@@ -24,11 +26,13 @@ export default function RootLayout() {
 
   return (
     <SafeAreaProvider>
-      <SafeAreaView style={{ flex: 1 }} edges={['top', 'bottom']}>
-        <Stack screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="(tabs)" />
-        </Stack>
-      </SafeAreaView>
+      <QueryClientProvider client={queryClient}>
+        <SafeAreaView style={{ flex: 1 }} edges={['top', 'bottom']}>
+          <Stack screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="(tabs)" />
+          </Stack>
+        </SafeAreaView>
+      </QueryClientProvider>
     </SafeAreaProvider>
   );
 }
