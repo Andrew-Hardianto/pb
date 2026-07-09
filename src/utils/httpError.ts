@@ -1,5 +1,5 @@
 import { dismissLoading } from '../services/main-service.service';
-// import { swalService } from '../services/swalService';
+import { showPopup } from '../stores/popupStore';
 
 let errorMessage: string = "";
 
@@ -14,12 +14,12 @@ export function handleHttpError(err: any, page?: string): void {
     if (err?.response) {
         handleKnownStatusError(err);
         if (err.response.status !== 503 && err.response.status !== 401) {
-            // swalService.present(errorMessage, 'error');
+            showPopup({ type: 'error', title: 'Error', message: errorMessage, primaryButtonText: 'Kembali' });
         }
     } else {
         errorMessage =
             "Can't connect to server. Please check your connection!";
-        // swalService.present(errorMessage, 'error');
+        showPopup({ type: 'error', title: 'Error', message: errorMessage, primaryButtonText: 'Kembali' });
     }
 }
 
@@ -34,7 +34,7 @@ export function handleHttpErrorLogin(err: any): void {
     }
 
     if (err?.response?.status !== 503) {
-        // swalService.present(errorMessage, 'error');
+        showPopup({ type: 'error', title: 'Error', message: errorMessage, primaryButtonText: 'Kembali' });
     }
 }
 

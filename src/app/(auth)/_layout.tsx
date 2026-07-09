@@ -1,10 +1,9 @@
-import React from 'react';
-import LoginScreen from "./login";
+import { Stack } from 'expo-router';
 
-const AuthLayout = () => {
+export default function AuthLayout() {
   return (
-    <LoginScreen />
+    <Stack screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="login" />
+    </Stack>
   );
-};
-
-export default AuthLayout;
+}

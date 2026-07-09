@@ -43,17 +43,20 @@
     "expo-glass-effect": "~55.0.10",
     "expo-image": "~55.0.8",
     "expo-linking": "~55.0.13",
+    "expo-local-authentication": "~55.0.15",
     "expo-router": "~55.0.12",
     "expo-splash-screen": "~55.0.18",
     "expo-status-bar": "~55.0.5",
     "expo-symbols": "~55.0.7",
     "expo-system-ui": "~55.0.15",
     "expo-web-browser": "~55.0.14",
+    "jwt-decode": "^4.0.0",
     "react": "19.2.0",
     "react-content-loader": "^7.1.2",
     "react-dom": "19.2.0",
     "react-native": "0.83.4",
     "react-native-gesture-handler": "~2.30.0",
+    "react-native-get-random-values": "^2.0.0",
     "react-native-keychain": "^10.0.0",
     "react-native-reanimated": "4.2.1",
     "react-native-safe-area-context": "~5.6.2",
@@ -68,6 +71,7 @@
   "devDependencies": {
     "@types/crypto-js": "^4.2.2",
     "@types/react": "~19.2.2",
+    "dotenv-cli": "^11.0.0",
     "typescript": "~5.9.2"
   },
   "private": true

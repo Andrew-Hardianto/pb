@@ -8,7 +8,7 @@ interface AppTab {
 }
 
 export const tabs: AppTab[] = [
-    { name: "index", title: "Home", icon: icons.home },
+    { name: "home", title: "Home", icon: icons.home },
     { name: "garansi", title: "Garansi", icon: icons.wallet },
     { name: "poin", title: "Poin", icon: icons.star },
     { name: "bantuan", title: "Bantuan", icon: icons.message },
@@ -60,7 +60,8 @@ export const STORAGE_KEYS = {
     REFRESH_TOKEN: 'GLA6F07C76',
     AUTHORITIES_TOKEN: 'MR1LPVSM5I',
     PROFILE: 'WBMJ23V89Y',
-    G3BP4J66UD: 'G3BP4J66UD',
+    FINGERPRINT_LOGIN_DATA: 'K3CYHQFYIW',
+    IS_SETUP_BIOMETRIC: 'G3BP4J66UD',
     PCL75YWWDB: 'PCL75YWWDB',
     I9WJ1B85A8: 'I9WJ1B85A8',
     TENANT_ID: 'NHAGVR3C8N',
