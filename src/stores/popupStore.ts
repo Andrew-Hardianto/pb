@@ -24,7 +24,13 @@ export const usePopupStore = create<PopupState>((set) => ({
     message: '',
     primaryButtonText: 'OK',
 
-    show: (options) => set({ ...options, isVisible: true }),
+    show: (options) => set({ 
+        onPrimaryPress: undefined,
+        onSecondaryPress: undefined,
+        secondaryButtonText: undefined,
+        ...options, 
+        isVisible: true 
+    }),
     hide: () => set({ isVisible: false }),
 }));
 

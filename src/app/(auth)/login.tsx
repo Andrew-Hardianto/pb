@@ -1,9 +1,11 @@
+import { Button } from '@/components/atoms/button';
+import { Input } from '@/components/atoms/input';
 import { STORAGE_KEYS } from '@/constants/data';
 import { checkBiometricAvailability, verifyBiometric } from '@/services/biometric.service';
 import { decrypt, encrypt } from '@/services/crypto.service';
 import { getUrlApi, postUrlApi } from '@/services/http.service';
 import { dismissLoading, presentLoading } from '@/services/main-service.service';
-import { getSecure, setSecure } from '@/services/storage.service';
+import { getSecure, removeSecure, setSecure } from '@/services/storage.service';
 import { showPopup } from '@/stores/popupStore';
 import { handleHttpError } from '@/utils/httpError';
 import { isIOS } from '@/utils/platform';
@@ -29,6 +31,7 @@ export default function LoginScreen() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [passwordVisible, setPasswordVisible] = useState(false);
+    const [rememberMe, setRememberMe] = useState(false);
     const [guideBookUrl, setGuideBookUrl] = useState<string | null>(null);
     const [showBiometricButton, setShowBiometricButton] = useState(false);
 
@@ -45,6 +48,26 @@ export default function LoginScreen() {
             }
         };
         checkBiometricSetup();
+    }, []);
+
+    useEffect(() => {
+        const checkRememberMe = async () => {
+            const savedData = await getSecure(STORAGE_KEYS.REMEMBER_ME);
+            if (savedData) {
+                const decryptedJson = decrypt(savedData);
+                if (decryptedJson) {
+                    const parsedData = JSON.parse(decryptedJson);
+                    const savedEmail = decrypt(parsedData.user);
+                    const savedPassword = decrypt(parsedData.password);
+                    if (savedEmail && savedPassword) {
+                        setEmail(savedEmail);
+                        setPassword(savedPassword);
+                        setRememberMe(true);
+                    }
+                }
+            }
+        };
+        checkRememberMe();
     }, []);
 
     useEffect(() => {
@@ -175,6 +198,12 @@ export default function LoginScreen() {
                 await setSecure(STORAGE_KEYS.REFRESH_TOKEN, encrypt(res.refresh_token));
                 await setSecure(STORAGE_KEYS.FINGERPRINT_LOGIN_DATA, encrypt(JSON.stringify(pw)));
 
+                if (rememberMe) {
+                    await setSecure(STORAGE_KEYS.REMEMBER_ME, encrypt(JSON.stringify(pw)));
+                } else {
+                    await removeSecure(STORAGE_KEYS.REMEMBER_ME);
+                }
+
                 await dismissLoading();
 
                 if (res.must_change_password) {
@@ -222,39 +251,27 @@ export default function LoginScreen() {
                     {/* Form */}
                     <View style={styles.formContainer}>
                         {/* Email Input */}
-                        <View style={styles.inputGroup}>
-                            <Text style={styles.inputLabel}>
-                                Email<Text style={styles.asterisk}>*</Text>
-                            </Text>
-                            <View style={styles.inputWrapper}>
-                                <Feather name="mail" size={20} color="#111" style={styles.inputIcon} />
-                                <TextInput
-                                    style={styles.input}
-                                    placeholder="Masukkan email anda"
-                                    placeholderTextColor="#999"
-                                    keyboardType="email-address"
-                                    autoCapitalize="none"
-                                    value={email}
-                                    onChangeText={setEmail}
-                                />
-                            </View>
-                        </View>
+                        <Input
+                            label="Email"
+                            required
+                            placeholder="Masukkan email anda"
+                            keyboardType="email-address"
+                            autoCapitalize="none"
+                            value={email}
+                            onChangeText={setEmail}
+                            leftIcon={<Feather name="mail" size={20} color="#111" />}
+                        />
 
                         {/* Password Input */}
-                        <View style={styles.inputGroup}>
-                            <Text style={styles.inputLabel}>
-                                Kata Sandi<Text style={styles.asterisk}>*</Text>
-                            </Text>
-                            <View style={styles.inputWrapper}>
-                                <Feather name="lock" size={20} color="#111" style={styles.inputIcon} />
-                                <TextInput
-                                    style={styles.input}
-                                    placeholder="Masukkan kata sandi"
-                                    placeholderTextColor="#999"
-                                    secureTextEntry={!passwordVisible}
-                                    value={password}
-                                    onChangeText={setPassword}
-                                />
+                        <Input
+                            label="Kata Sandi"
+                            required
+                            placeholder="Masukkan kata sandi"
+                            secureTextEntry={!passwordVisible}
+                            value={password}
+                            onChangeText={setPassword}
+                            leftIcon={<Feather name="lock" size={20} color="#111" />}
+                            rightIcon={
                                 <TouchableOpacity
                                     onPress={() => setPasswordVisible(!passwordVisible)}
                                     style={styles.eyeIcon}
@@ -265,27 +282,37 @@ export default function LoginScreen() {
                                         color="#111"
                                     />
                                 </TouchableOpacity>
-                            </View>
-                        </View>
+                            }
+                        />
 
-                        {/* Forgot Password */}
-                        <TouchableOpacity style={styles.forgotPasswordContainer}>
-                            <Text style={styles.forgotPassword}>Lupa Password ?</Text>
-                        </TouchableOpacity>
+                        {/* Options Row */}
+                        <View style={styles.optionsRow}>
+                            <TouchableOpacity style={styles.rememberMeContainer} onPress={() => setRememberMe(!rememberMe)}>
+                                <MaterialCommunityIcons 
+                                    name={rememberMe ? "checkbox-marked" : "checkbox-blank-outline"} 
+                                    size={20} 
+                                    color={rememberMe ? "#E62129" : "#666"} 
+                                />
+                                <Text style={styles.rememberMeText}>Ingat Saya</Text>
+                            </TouchableOpacity>
+
+                            {/* Forgot Password */}
+                            <TouchableOpacity style={styles.forgotPasswordContainer}>
+                                <Text style={styles.forgotPassword}>Lupa Password ?</Text>
+                            </TouchableOpacity>
+                        </View>
 
                         {/* Buttons Row */}
                         <View style={styles.buttonRow}>
-                            <TouchableOpacity
+                            <Button
+                                title="Masuk"
+                                onPress={handleLogin}
+                                disabled={!isFormValid}
                                 style={[
                                     styles.loginButton,
                                     !showBiometricButton && { marginRight: 0 },
-                                    !isFormValid && { backgroundColor: '#CCCCCC' }
                                 ]}
-                                onPress={handleLogin}
-                                disabled={!isFormValid}
-                            >
-                                <Text style={styles.loginButtonText}>Masuk</Text>
-                            </TouchableOpacity>
+                            />
                             {showBiometricButton && (
                                 <TouchableOpacity style={styles.fingerprintButton} onPress={handleBiometricLogin}>
                                     <MaterialCommunityIcons name={isIOS() ? "face-recognition" : "fingerprint"} size={24} color="#E62129" />
@@ -302,7 +329,7 @@ export default function LoginScreen() {
 
                         {/* Register Link */}
                         <View style={styles.registerContainer}>
-                            <TouchableOpacity>
+                            <TouchableOpacity onPress={() => router.push('/(auth)/register' as any)}>
                                 <Text style={styles.registerText}>Daftar Pengguna</Text>
                             </TouchableOpacity>
                         </View>
@@ -374,44 +401,26 @@ const styles = StyleSheet.create({
     formContainer: {
         marginBottom: 24,
     },
-    inputGroup: {
-        marginBottom: 20,
-    },
-    inputLabel: {
-        fontFamily: 'sans-bold',
-        fontSize: 14,
-        color: '#111',
-        marginBottom: 8,
-    },
-    asterisk: {
-        color: '#E62129',
-    },
-    inputWrapper: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        borderWidth: 1,
-        borderColor: '#EAEAEA',
-        borderRadius: 8,
-        backgroundColor: '#FFFFFF',
-        height: 52,
-        paddingHorizontal: 16,
-    },
-    inputIcon: {
-        marginRight: 12,
-    },
-    input: {
-        flex: 1,
-        fontFamily: 'sans-regular',
-        fontSize: 14,
-        color: '#111',
-        height: '100%',
-    },
     eyeIcon: {
         padding: 4,
     },
-    forgotPasswordContainer: {
-        alignSelf: 'flex-start',
+    optionsRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
         marginBottom: 24,
+    },
+    rememberMeContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    rememberMeText: {
+        marginLeft: 8,
+        fontFamily: 'sans-medium',
+        fontSize: 13,
+        color: '#444',
+    },
+    forgotPasswordContainer: {
     },
     forgotPassword: {
         fontFamily: 'sans-medium',
@@ -425,17 +434,7 @@ const styles = StyleSheet.create({
     },
     loginButton: {
         flex: 1,
-        backgroundColor: '#E62129',
-        height: 52,
-        borderRadius: 8,
-        justifyContent: 'center',
-        alignItems: 'center',
         marginRight: 12,
-    },
-    loginButtonText: {
-        fontFamily: 'sans-bold',
-        fontSize: 15,
-        color: '#FFFFFF',
     },
     fingerprintButton: {
         width: 52,

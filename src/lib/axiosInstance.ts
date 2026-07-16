@@ -35,9 +35,9 @@ axiosInstance.interceptors.request.use(
         const accessToken = await getAccessToken();
         const authToken = await authoritiesToken();
 
-        config.headers['Authorization'] = `Bearer ${accessToken}`;
-        config.headers['AuthorizationToken'] = authToken;
-        config.headers['X-TenantID'] = tenantIds;
+        if (accessToken) config.headers['Authorization'] = `Bearer ${accessToken}`;
+        if (authToken) config.headers['AuthorizationToken'] = authToken;
+        if (tenantIds) config.headers['X-TenantID'] = tenantIds;
 
         return config;
     },

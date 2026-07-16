@@ -1,6 +1,7 @@
 // src/services/apiService.ts
 import { axiosInstance } from '@/lib/axiosInstance';
 import { AxiosRequestConfig, RawAxiosRequestHeaders } from 'axios';
+import { authoritiesToken, getAccessToken, getMainUrl, tenantId } from './main-service.service';
 
 export type RequestHeaders = RawAxiosRequestHeaders;
 
@@ -29,14 +30,45 @@ export async function postUrlApi<T = any>(
     dataPost: any,
     config?: ApiConfig
 ): Promise<T> {
-    const isFormData = dataPost instanceof FormData;
-    const finalConfig = buildConfig(config);
+    const isFormData = dataPost && dataPost._parts;
 
-    // Hapus Content-Type untuk FormData agar boundary ter-set otomatis
-    if (isFormData && finalConfig.headers?.['Content-Type']) {
-        delete finalConfig.headers['Content-Type'];
+    if (isFormData) {
+        const tenantIds = await tenantId();
+        const accessToken = await getAccessToken();
+        const authToken = await authoritiesToken();
+
+        const headers: any = {
+            ...(config?.headers || {})
+        };
+
+        if (accessToken) headers['Authorization'] = `Bearer ${accessToken}`;
+        if (authToken) headers['AuthorizationToken'] = authToken;
+        if (tenantIds) headers['X-TenantID'] = tenantIds;
+        
+        // Hapus Content-Type manual agar React Native bisa inject otomatis dengan boundary yang benar
+        delete headers['Content-Type'];
+
+        const response = await fetch(getMainUrl() + urlApi, {
+            method: 'POST',
+            body: dataPost,
+            headers,
+        });
+
+        if (!response.ok) {
+            let errorData;
+            try {
+                errorData = await response.json();
+            } catch (e) {
+                errorData = { message: response.statusText };
+            }
+            throw { response: { status: response.status, data: errorData } };
+        }
+
+        const text = await response.text();
+        return text ? JSON.parse(text) : ({} as T);
     }
 
+    const finalConfig = buildConfig(config);
     const response = await axiosInstance.post<T>(urlApi, dataPost, finalConfig);
     return response.data;
 }
