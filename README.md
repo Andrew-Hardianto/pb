@@ -1,56 +1,55 @@
-# Welcome to your Expo app 👋
+# PB App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+PB App is a mobile application built with Expo and React Native.
 
-## Get started
+## Getting Started
 
-1. Install dependencies
-
+1. Install dependencies:
    ```bash
    npm install
    ```
 
-2. Start the app
+## Running the Application
 
-   ```bash
-   npx expo start
-   ```
+You can start the development server using Expo, or run directly on Android/iOS simulators and devices.
 
-In the output, you'll find options to open the app in a
+**Start Expo Server:**
+- Default: `npm start`
+- Development Environment: `npm run start:dev`
+- Production Environment: `npm run start:prod`
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+**Run on Android:**
+- Default: `npm run android`
+- Development Environment: `npm run android:dev`
+- Production Environment: `npm run android:prod`
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+**Run on iOS:**
+- Default: `npm run ios`
+- Development Environment: `npm run ios:dev`
+- Production Environment: `npm run ios:prod`
 
-## Get a fresh project
+## Building the Application (Production)
 
-When you're ready, run:
+**Android Builds:**
+- Generate APK (for direct install/testing): `npm run android:apk:prod`
+- Generate AAB (for Play Store upload): `npm run android:aab:prod`
 
-```bash
-npm run reset-project
+**iOS Builds:**
+- Generate iOS Archive: `npm run ios:archive:prod`
+- Generate IPA: `npm run ios:ipa:prod` (Requires generating the archive first)
+
+## Configuration Constants
+
+```javascript
+ACCESS_TOKEN: 'SXNIUDH1WJ',
+REFRESH_TOKEN: 'GLA6F07C76',
+AUTHORITIES_TOKEN: 'MR1LPVSM5I',
+PROFILE: 'WBMJ23V89Y',
+FINGERPRINT_LOGIN_DATA: 'K3CYHQFYIW',
+IS_SETUP_BIOMETRIC: 'G3BP4J66UD',
+PCL75YWWDB: 'PCL75YWWDB',
+I9WJ1B85A8: 'I9WJ1B85A8',
+TENANT_ID: 'NHAGVR3C8N',
+FORGOT_PASSWORD: 'PPB5CSW709',
+REMEMBER_ME: 'RM8ME3K2L1',
 ```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-### Other setup steps
-
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
