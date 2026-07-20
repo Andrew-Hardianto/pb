@@ -27,18 +27,21 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
-        width: 100,
         height: 40,
-        borderRadius: 8,
-        gap: 10,
+        borderRadius: 20,
     },
     tabItemActive: {
         backgroundColor: Colors.danger,
+        paddingHorizontal: 16,
+        // Using minWidth or fixed width prevents the flex parent from squishing the text
+        minWidth: 100, 
     },
     tabLabel: {
         color: '#FFFFFF',
         fontSize: 14,
         fontWeight: '600',
+        marginLeft: 8,
+        flexShrink: 0,
     },
 });
 

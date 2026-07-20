@@ -3,6 +3,7 @@ import message from "@/assets/icon/tabbar/message-question.svg";
 import profile from "@/assets/icon/tabbar/profile.svg";
 import star from "@/assets/icon/tabbar/star.svg";
 import wallet from "@/assets/icon/tabbar/wallet.svg";
+import userAdd from "@/assets/icon/general/user-add.svg";
 
 export const icons = {
     home,
@@ -10,6 +11,7 @@ export const icons = {
     profile,
     star,
     message,
+    userAdd,
 } as const;
 
 export type IconKey = keyof typeof icons;
