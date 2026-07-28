@@ -1,6 +1,7 @@
 import { Colors } from '@/constants/theme';
 import { axiosInstance } from '@/lib/axiosInstance';
 import { useQuery } from '@tanstack/react-query';
+import { router } from 'expo-router';
 import React, { useState } from 'react';
 import ContentLoader, { Rect } from "react-content-loader/native";
 import { Dimensions, Image, NativeScrollEvent, NativeSyntheticEvent, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
@@ -78,7 +79,7 @@ const NewsCarousel = ({ isLoading: propIsLoading }: { isLoading?: boolean }) => 
         <View style={styles.container}>
             <View style={styles.header}>
                 <Text style={styles.title}>Berita Untuk Anda</Text>
-                <TouchableOpacity style={styles.button}>
+                <TouchableOpacity style={styles.button} onPress={() => router.push('/news')}>
                     <Text style={styles.buttonText}>Lihat Detail</Text>
                 </TouchableOpacity>
             </View>
