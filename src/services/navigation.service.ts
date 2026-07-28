@@ -1,4 +1,4 @@
-import { createNavigationContainerRef } from '@react-navigation/native';
+import { router } from 'expo-router';
 
 export type RootStackParamList = {
     Login: undefined;
@@ -6,20 +6,21 @@ export type RootStackParamList = {
     Dashboard: undefined;
 };
 
-export const navigationRef = createNavigationContainerRef<RootStackParamList>();
-
-export function navigate(name: keyof RootStackParamList, params?: object) {
-    if (navigationRef.isReady()) {
-        navigationRef.navigate(name as any, params as any);
+export function navigate(name: keyof RootStackParamList, params?: any) {
+    if (name === 'Login') {
+        router.push('/(auth)/login');
+    } else if (name === 'Home') {
+        router.push('/(tabs)/home');
+    } else {
+        router.push(`/${(name as string).toLowerCase()}` as any);
     }
 }
 
 /** Reset stack ke root, setara navCtrl.navigateRoot() */
 export function navigateRoot(name: string) {
-    if (navigationRef.isReady()) {
-        navigationRef.resetRoot({
-            index: 0,
-            routes: [{ name }],
-        });
+    if (name === 'Login') {
+        router.replace('/(auth)/login');
+    } else {
+        router.replace(`/${name.toLowerCase()}` as any);
     }
 }

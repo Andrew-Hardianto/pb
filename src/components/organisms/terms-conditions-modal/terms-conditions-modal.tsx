@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { Modal, View, Text, StyleSheet, TouchableOpacity, ScrollView, useWindowDimensions } from 'react-native';
-import { Feather } from '@expo/vector-icons';
 import { Colors } from '@/constants/theme';
+import { Feather } from '@expo/vector-icons';
+import React, { useState } from 'react';
+import { Modal, ScrollView, StyleSheet, Text, TouchableOpacity, useWindowDimensions, View } from 'react-native';
 
 interface TermItem {
     id: string;
@@ -29,7 +29,7 @@ const TermsConditionsModal: React.FC<Props> = ({ visible, data, onSubmit }) => {
             <View style={styles.overlay}>
                 <View style={styles.container}>
                     <Text style={styles.title}>Terms and Conditions</Text>
-                    
+
                     <View style={styles.scrollContainer}>
                         <ScrollView showsVerticalScrollIndicator={true} contentContainerStyle={styles.scrollContent}>
                             {terms.length > 0 ? (
@@ -46,27 +46,27 @@ const TermsConditionsModal: React.FC<Props> = ({ visible, data, onSubmit }) => {
                     </View>
 
                     <View style={styles.footer}>
-                        <TouchableOpacity 
-                            style={styles.checkboxContainer} 
+                        <TouchableOpacity
+                            style={styles.checkboxContainer}
                             onPress={() => setIsChecked(!isChecked)}
                             activeOpacity={0.7}
                         >
-                            <Feather 
-                                name={isChecked ? "check-square" : "square"} 
-                                size={20} 
-                                color={isChecked ? Colors.danger : "#666"} 
+                            <Feather
+                                name={isChecked ? "check-square" : "square"}
+                                size={20}
+                                color={isChecked ? Colors.danger : "#666"}
                             />
                             <Text style={styles.checkboxText}>Saya telah membaca dan menyetujui Syarat & Ketentuan</Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity 
+                        <TouchableOpacity
                             style={[styles.submitButton, (!isChecked || isLoading) && styles.submitButtonDisabled]}
                             disabled={!isChecked || isLoading}
                             onPress={async () => {
                                 setIsLoading(true);
                                 try {
                                     await onSubmit();
-                                    setIsChecked(false); // Reset after success
+                                    setIsChecked(false);
                                 } catch (e) {
                                     // Handle error if needed
                                 } finally {
