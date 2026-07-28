@@ -7,10 +7,10 @@ import { axiosInstance } from '@/lib/axiosInstance';
 import { decrypt, encrypt } from '@/services/crypto.service';
 import { postUrlApi } from '@/services/http.service';
 import { getSecure, setSecure } from '@/services/storage.service';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import * as Application from 'expo-application';
-import React, { useEffect, useState } from 'react';
-import { Platform, ScrollView, StyleSheet } from 'react-native';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Platform, RefreshControl, ScrollView, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import TermsConditionsModal from '@/components/organisms/terms-conditions-modal/terms-conditions-modal';
 
@@ -27,6 +27,15 @@ const fetchTermConditionsData = async () => {
 };
 
 function HomeScreen() {
+    const queryClient = useQueryClient();
+    const [refreshing, setRefreshing] = useState(false);
+
+    const onRefresh = useCallback(async () => {
+        setRefreshing(true);
+        await queryClient.invalidateQueries();
+        setRefreshing(false);
+    }, [queryClient]);
+
     const { data: profileData, isLoading: isProfileLoading } = useQuery({
         queryKey: ['profile'],
         queryFn: fetchProfileData,
@@ -96,8 +105,12 @@ function HomeScreen() {
     return (
         <SafeAreaView style={styles.container} edges={['top']}>
             <ScrollView
+                style={{ flex: 1 }}
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={styles.scrollContent}
+                refreshControl={
+                    <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                }
             >
                 <HomeHeader isLoading={isProfileLoading} data={profileData} />
                 <HomeAddress isLoading={isProfileLoading} data={profileData} />

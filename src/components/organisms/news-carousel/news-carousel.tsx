@@ -12,7 +12,13 @@ const fallbackNewsData: any[] = [];
 
 const fetchNewsData = async () => {
     const { data } = await axiosInstance.get('/api/mobile/v1/news');
-    return data?.data || data; // Handle different response wrappers
+    let res = data?.data || data;
+    res.forEach((element: any) => {
+        if (element.attachments.length > 0) {
+            element.image = element.attachments[0].path;
+        }
+    });
+    return res;
 };
 
 const NewsCarousel = ({ isLoading: propIsLoading }: { isLoading?: boolean }) => {
@@ -23,7 +29,6 @@ const NewsCarousel = ({ isLoading: propIsLoading }: { isLoading?: boolean }) => 
 
     const isLoading = propIsLoading || queryIsLoading;
 
-    // Use API data if available and is array, otherwise fallback
     const newsData = Array.isArray(apiData) && apiData.length > 0 ? apiData : fallbackNewsData;
 
     const [activeIndex, setActiveIndex] = useState(0);
