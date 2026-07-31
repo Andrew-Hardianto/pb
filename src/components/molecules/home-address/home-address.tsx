@@ -3,13 +3,16 @@ import { Feather } from '@expo/vector-icons';
 import React from 'react';
 import ContentLoader, { Rect } from "react-content-loader/native";
 import { StyleSheet, Text, View } from 'react-native';
+import { useTheme } from '@/hooks/useTheme';
 
 const HomeAddress = ({ isLoading, data }: { isLoading?: boolean; data?: any }) => {
+    const { colors, isDarkMode } = useTheme();
+
     if (isLoading) {
         return (
-            <View style={styles.container}>
+            <View style={[styles.container, { backgroundColor: colors.background }]}>
                 <Feather name="check-circle" size={16} color="#E0E0E0" style={styles.icon} />
-                <ContentLoader viewBox="0 0 300 36" width="100%" height={36}>
+                <ContentLoader viewBox="0 0 300 36" width="100%" height={36} backgroundColor={isDarkMode ? colors.backgroundElement : "#f3f3f3"} foregroundColor={isDarkMode ? colors.backgroundSelected : "#ecebeb"}>
                     <Rect x="0" y="2" rx="4" ry="4" width="100%" height="12" />
                     <Rect x="0" y="20" rx="4" ry="4" width="70%" height="12" />
                 </ContentLoader>
@@ -17,14 +20,14 @@ const HomeAddress = ({ isLoading, data }: { isLoading?: boolean; data?: any }) =
         );
     }
 
-    return (
-        <View style={styles.container}>
-            <Feather name="check-circle" size={16} color={Colors.danger} style={styles.icon} />
-            <Text style={styles.addressText} numberOfLines={2}>
-                {data?.address || '-'}
-            </Text>
-        </View>
-    );
+        return (
+            <View style={[styles.container, { backgroundColor: colors.background }]}>
+                <Feather name="check-circle" size={16} color={Colors.danger} style={styles.icon} />
+                <Text style={[styles.addressText, { color: colors.textSecondary }]} numberOfLines={2}>
+                    {data?.address || '-'}
+                </Text>
+            </View>
+        );
 };
 
 const styles = StyleSheet.create({

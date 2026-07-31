@@ -4,6 +4,7 @@ import { Colors } from "@/constants/theme";
 import { Tabs } from 'expo-router';
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { useTheme } from '@/hooks/useTheme';
 import { axiosInstance } from '@/lib/axiosInstance';
 
 const fetchPointsData = async () => {
@@ -12,6 +13,8 @@ const fetchPointsData = async () => {
 };
 
 const TabLayout = () => {
+  const { colors, isDarkMode } = useTheme();
+  
   const { data } = useQuery({
     queryKey: ['points'],
     queryFn: fetchPointsData,
@@ -29,7 +32,7 @@ const TabLayout = () => {
         tabBarActiveTintColor: Colors.danger,
         tabBarStyle: {
           position: 'absolute',
-          backgroundColor: Colors.primary,
+          backgroundColor: isDarkMode ? colors.backgroundElement : Colors.primary,
           borderTopWidth: 0,
           borderTopEndRadius: 16,
           borderTopStartRadius: 16,

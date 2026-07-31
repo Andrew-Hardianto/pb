@@ -12,6 +12,7 @@ import * as Application from 'expo-application';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Platform, RefreshControl, ScrollView, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useTheme } from '@/hooks/useTheme';
 import TermsConditionsModal from '@/components/organisms/terms-conditions-modal/terms-conditions-modal';
 
 const fetchProfileData = async () => {
@@ -27,6 +28,7 @@ const fetchTermConditionsData = async () => {
 };
 
 function HomeScreen() {
+    const { colors, isDarkMode } = useTheme();
     const queryClient = useQueryClient();
     const [refreshing, setRefreshing] = useState(false);
 
@@ -103,11 +105,11 @@ function HomeScreen() {
     };
 
     return (
-        <SafeAreaView style={styles.container} edges={['top']}>
+        <SafeAreaView style={[styles.container, { backgroundColor: isDarkMode ? colors.background : '#FFFFFF' }]} edges={['top']}>
             <ScrollView
                 style={{ flex: 1 }}
                 showsVerticalScrollIndicator={false}
-                contentContainerStyle={styles.scrollContent}
+                contentContainerStyle={[styles.scrollContent, { backgroundColor: isDarkMode ? colors.background : '#F7F7F7' }]}
                 refreshControl={
                     <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
                 }

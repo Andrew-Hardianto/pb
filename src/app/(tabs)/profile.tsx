@@ -11,6 +11,8 @@ import { useQuery } from '@tanstack/react-query';
 import React, { useState } from 'react';
 import { ActivityIndicator, Image, ScrollView, StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useTheme } from '@/hooks/useTheme';
+import { useAppStore } from '@/stores/appStore';
 
 export default function ProfileScreen() {
   const { data: profileData, isLoading } = useQuery({
@@ -22,17 +24,18 @@ export default function ProfileScreen() {
   });
 
   const [isBiometricEnabled, setIsBiometricEnabled] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const { colors, isDarkMode } = useTheme();
+  const setIsDarkMode = useAppStore(state => state.setIsDarkMode);
 
   const renderMenuItem = (title: string, Icon: any, type: 'link' | 'switch', value?: boolean, onValueChange?: (val: boolean) => void, onPress?: () => void) => {
     return (
-      <TouchableOpacity style={styles.menuItem} disabled={type === 'switch'} onPress={onPress}>
-        <View style={styles.menuIconContainer}>
+      <TouchableOpacity style={[styles.menuItem, { backgroundColor: isDarkMode ? colors.backgroundElement : '#FFF' }]} disabled={type === 'switch'} onPress={onPress}>
+        <View style={[styles.menuIconContainer, { backgroundColor: isDarkMode ? '#2A1C1C' : '#FFF0F0' }]}>
           <Icon width={24} height={24} color={Colors.danger} />
         </View>
-        <Text style={styles.menuTitle}>{title}</Text>
+        <Text style={[styles.menuTitle, { color: colors.text }]}>{title}</Text>
         {type === 'link' ? (
-          <Feather name="chevron-right" size={24} color="#000" />
+          <Feather name="chevron-right" size={24} color={colors.text} />
         ) : (
           <Switch
             value={value}
@@ -46,10 +49,10 @@ export default function ProfileScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
-      <View style={styles.header}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
+      <View style={[styles.header, { backgroundColor: colors.background }]}>
         <ProfileIcon width={24} height={24} color={Colors.danger} />
-        <Text style={styles.headerTitle}>Pengaturan Profil</Text>
+        <Text style={[styles.headerTitle, { color: colors.text }]}>Pengaturan Profil</Text>
       </View>
 
       <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
@@ -57,7 +60,7 @@ export default function ProfileScreen() {
           <ActivityIndicator size="large" color={Colors.danger} style={{ marginTop: 50 }} />
         ) : (
           <>
-            <View style={styles.profileCard}>
+            <View style={[styles.profileCard, { backgroundColor: isDarkMode ? colors.backgroundElement : '#FFF' }]}>
               <Image 
                 source={{ uri: profileData?.backgroundPicture || 'https://via.placeholder.com/350x150' }} 
                 style={styles.coverImage} 
@@ -67,12 +70,12 @@ export default function ProfileScreen() {
                 <View style={styles.avatarWrapper}>
                   <Image 
                     source={{ uri: profileData?.profilePicture || 'https://via.placeholder.com/100' }} 
-                    style={styles.profileImage} 
+                    style={[styles.profileImage, { borderColor: isDarkMode ? colors.backgroundElement : '#FFF' }]} 
                   />
                 </View>
                 <View style={styles.profileTexts}>
-                  <Text style={styles.profileName}>{profileData?.name || '-'}</Text>
-                  <Text style={styles.profileEmail}>{profileData?.email || '-'}</Text>
+                  <Text style={[styles.profileName, { color: colors.text }]}>{profileData?.name || '-'}</Text>
+                  <Text style={[styles.profileEmail, { color: colors.textSecondary }]}>{profileData?.email || '-'}</Text>
                 </View>
               </View>
             </View>

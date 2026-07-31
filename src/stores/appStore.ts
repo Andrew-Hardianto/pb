@@ -14,6 +14,7 @@ interface AppStore {
     isSetBiometric: boolean;
     sessionState: any;
     currentURL: string;
+    isDarkMode: boolean;
 
     // === Actions ===
     setLoading: (loading: boolean, message?: string) => void;
@@ -23,6 +24,7 @@ interface AppStore {
     setIsOwner: (value: boolean) => void;
     setCurrentURL: (url: string) => void;
     setSessionState: (state: any) => void;
+    setIsDarkMode: (value: boolean) => void;
 }
 
 export const useAppStore = create<AppStore>((set) => ({
@@ -39,6 +41,7 @@ export const useAppStore = create<AppStore>((set) => ({
     isSetBiometric: false,
     sessionState: null,
     currentURL: '',
+    isDarkMode: false,
 
     setLoading: (loading, message) => set({ loading, loadingMessage: message }),
     setLoadingLogout: (loadingLogout) => set({ loadingLogout }),
@@ -47,4 +50,5 @@ export const useAppStore = create<AppStore>((set) => ({
     setIsOwner: (isOwner) => set({ isOwner }),
     setCurrentURL: (currentURL) => set({ currentURL }),
     setSessionState: (sessionState) => set({ sessionState }),
+    setIsDarkMode: (isDarkMode) => set({ isDarkMode }),
 }));

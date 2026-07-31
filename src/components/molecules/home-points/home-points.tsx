@@ -5,6 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import React from 'react';
 import ContentLoader, { Rect } from "react-content-loader/native";
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useTheme } from '@/hooks/useTheme';
 
 const fetchPointsData = async () => {
     const { data } = await axiosInstance.get('/api/mobile/v1/poin/balance');
@@ -20,9 +21,11 @@ const HomePoints = ({ isLoading: propIsLoading }: { isLoading?: boolean }) => {
 
     const isLoading = propIsLoading || queryIsLoading;
 
+    const { colors, isDarkMode } = useTheme();
+
     if (isLoading) {
         return (
-            <View style={styles.container}>
+            <View style={[styles.container, { backgroundColor: colors.background }]}>
                 <View style={[styles.card, { backgroundColor: '#E0E0E0' }]}>
                     <View style={styles.leftContent}>
                         <Feather name="star" size={24} color="#C0C0C0" />
@@ -36,7 +39,7 @@ const HomePoints = ({ isLoading: propIsLoading }: { isLoading?: boolean }) => {
                     <View style={[styles.button, { backgroundColor: '#C0C0C0' }]} />
                 </View>
                 <View style={{ marginTop: 8 }}>
-                    <ContentLoader viewBox="0 0 250 14" width={250} height={14}>
+                    <ContentLoader viewBox="0 0 250 14" width={250} height={14} backgroundColor={isDarkMode ? colors.backgroundElement : "#f3f3f3"} foregroundColor={isDarkMode ? colors.backgroundSelected : "#ecebeb"}>
                         <Rect x="0" y="0" rx="4" ry="4" width="250" height="12" />
                     </ContentLoader>
                 </View>
@@ -52,7 +55,7 @@ const HomePoints = ({ isLoading: propIsLoading }: { isLoading?: boolean }) => {
     const nextMonthName = monthNames[nextMonthIndex];
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, { backgroundColor: colors.background }]}>
             <View style={styles.card}>
                 <View style={styles.leftContent}>
                     <Feather name="star" size={24} color="#FFFFFF" />
@@ -66,7 +69,7 @@ const HomePoints = ({ isLoading: propIsLoading }: { isLoading?: boolean }) => {
                 </TouchableOpacity>
             </View>
             {data?.expiringPoin > 0 && (
-                <Text style={styles.infoText}>
+                <Text style={[styles.infoText, { color: colors.text }]}>
                     <Text style={styles.asterisk}>*</Text>Total {data?.expiringPoin.toLocaleString('id-ID')} point akan kadaluwarsa di bulan {data?.expiryMonth ?? nextMonthName}
                 </Text>
             )}

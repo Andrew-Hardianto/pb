@@ -5,6 +5,7 @@ import { router } from 'expo-router';
 import React, { useState } from 'react';
 import ContentLoader, { Rect } from "react-content-loader/native";
 import { Dimensions, Image, NativeScrollEvent, NativeSyntheticEvent, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useTheme } from '@/hooks/useTheme';
 
 const { width } = Dimensions.get('window');
 const CARD_WIDTH = width - 40; // 20 padding on each side
@@ -29,6 +30,7 @@ const NewsCarousel = ({ isLoading: propIsLoading }: { isLoading?: boolean }) => 
     });
 
     const isLoading = propIsLoading || queryIsLoading;
+    const { colors, isDarkMode } = useTheme();
 
     const newsData = Array.isArray(apiData) && apiData.length > 0 ? apiData : fallbackNewsData;
 
@@ -46,12 +48,12 @@ const NewsCarousel = ({ isLoading: propIsLoading }: { isLoading?: boolean }) => 
 
     if (isLoading) {
         return (
-            <View style={styles.container}>
+            <View style={[styles.container, { backgroundColor: colors.background }]}>
                 <View style={styles.header}>
-                    <ContentLoader viewBox="0 0 150 24" width={150} height={24}>
+                    <ContentLoader viewBox="0 0 150 24" width={150} height={24} backgroundColor={isDarkMode ? colors.backgroundElement : "#f3f3f3"} foregroundColor={isDarkMode ? colors.backgroundSelected : "#ecebeb"}>
                         <Rect x="0" y="4" rx="4" ry="4" width="120" height="16" />
                     </ContentLoader>
-                    <ContentLoader viewBox="0 0 80 30" width={80} height={30}>
+                    <ContentLoader viewBox="0 0 80 30" width={80} height={30} backgroundColor={isDarkMode ? colors.backgroundElement : "#f3f3f3"} foregroundColor={isDarkMode ? colors.backgroundSelected : "#ecebeb"}>
                         <Rect x="0" y="0" rx="8" ry="8" width="80" height="30" />
                     </ContentLoader>
                 </View>
@@ -65,7 +67,7 @@ const NewsCarousel = ({ isLoading: propIsLoading }: { isLoading?: boolean }) => 
                     </ContentLoader>
                 </View>
                 <View style={styles.pagination}>
-                    <ContentLoader viewBox="0 0 50 8" width={50} height={8}>
+                    <ContentLoader viewBox="0 0 50 8" width={50} height={8} backgroundColor={isDarkMode ? colors.backgroundElement : "#f3f3f3"} foregroundColor={isDarkMode ? colors.backgroundSelected : "#ecebeb"}>
                         <Rect x="0" y="0" rx="4" ry="4" width="8" height="8" />
                         <Rect x="14" y="0" rx="4" ry="4" width="8" height="8" />
                         <Rect x="28" y="0" rx="4" ry="4" width="8" height="8" />
@@ -76,10 +78,10 @@ const NewsCarousel = ({ isLoading: propIsLoading }: { isLoading?: boolean }) => 
     }
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, { backgroundColor: colors.background }]}>
             <View style={styles.header}>
-                <Text style={styles.title}>Berita Untuk Anda</Text>
-                <TouchableOpacity style={styles.button} onPress={() => router.push('/news')}>
+                <Text style={[styles.title, { color: colors.text }]}>Berita Untuk Anda</Text>
+                <TouchableOpacity style={[styles.button, { backgroundColor: isDarkMode ? colors.backgroundElement : Colors.pink }]} onPress={() => router.push('/news')}>
                     <Text style={styles.buttonText}>Lihat Detail</Text>
                 </TouchableOpacity>
             </View>
@@ -107,6 +109,7 @@ const NewsCarousel = ({ isLoading: propIsLoading }: { isLoading?: boolean }) => 
                         key={index}
                         style={[
                             styles.dot,
+                            { backgroundColor: isDarkMode ? colors.backgroundElement : '#E0E0E0' },
                             activeIndex === index ? styles.activeDot : null
                         ]}
                     />

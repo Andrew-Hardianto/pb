@@ -2,6 +2,7 @@ import { Colors } from '@/constants/theme';
 import { Feather } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { Modal, ScrollView, StyleSheet, Text, TouchableOpacity, useWindowDimensions, View } from 'react-native';
+import { useTheme } from '@/hooks/useTheme';
 
 interface TermItem {
     id: string;
@@ -21,26 +22,27 @@ const TermsConditionsModal: React.FC<Props> = ({ visible, data, onSubmit }) => {
     const { width } = useWindowDimensions();
     const [isChecked, setIsChecked] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const { colors, isDarkMode } = useTheme();
 
     const terms: TermItem[] = Array.isArray(data) ? data : (Array.isArray(data?.data) ? data.data : []);
 
     return (
         <Modal visible={visible} transparent={true} animationType="fade">
             <View style={styles.overlay}>
-                <View style={styles.container}>
-                    <Text style={styles.title}>Terms and Conditions</Text>
+                <View style={[styles.container, { backgroundColor: isDarkMode ? colors.backgroundElement : '#FFFFFF' }]}>
+                    <Text style={[styles.title, { color: colors.text }]}>Terms and Conditions</Text>
 
-                    <View style={styles.scrollContainer}>
+                    <View style={[styles.scrollContainer, { borderColor: isDarkMode ? colors.backgroundSelected : '#EEEEEE' }]}>
                         <ScrollView showsVerticalScrollIndicator={true} contentContainerStyle={styles.scrollContent}>
                             {terms.length > 0 ? (
                                 terms.map((item, index) => (
                                     <View key={item.id || index.toString()} style={styles.termItem}>
-                                        <Text style={styles.termTitle}>{item.termType}</Text>
-                                        <Text style={styles.termRemark}>{item.remark}</Text>
+                                        <Text style={[styles.termTitle, { color: colors.text }]}>{item.termType}</Text>
+                                        <Text style={[styles.termRemark, { color: colors.textSecondary }]}>{item.remark}</Text>
                                     </View>
                                 ))
                             ) : (
-                                <Text style={styles.emptyText}>Memuat syarat dan ketentuan...</Text>
+                                <Text style={[styles.emptyText, { color: colors.textSecondary }]}>Memuat syarat dan ketentuan...</Text>
                             )}
                         </ScrollView>
                     </View>
@@ -54,9 +56,9 @@ const TermsConditionsModal: React.FC<Props> = ({ visible, data, onSubmit }) => {
                             <Feather
                                 name={isChecked ? "check-square" : "square"}
                                 size={20}
-                                color={isChecked ? Colors.danger : "#666"}
+                                color={isChecked ? Colors.danger : colors.textSecondary}
                             />
-                            <Text style={styles.checkboxText}>Saya telah membaca dan menyetujui Syarat & Ketentuan</Text>
+                            <Text style={[styles.checkboxText, { color: colors.text }]}>Saya telah membaca dan menyetujui Syarat & Ketentuan</Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity

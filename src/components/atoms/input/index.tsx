@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, TextInput, TextInputProps, StyleSheet, StyleProp, ViewStyle } from 'react-native';
+import { useTheme } from '@/hooks/useTheme';
 
 export interface InputProps extends TextInputProps {
     label?: string;
@@ -20,18 +21,25 @@ export const Input: React.FC<InputProps> = ({
     style,
     ...props
 }) => {
+    const { colors, isDarkMode } = useTheme();
+
     return (
         <View style={styles.inputGroup}>
             {label && (
-                <Text style={styles.inputLabel}>
+                <Text style={[styles.inputLabel, { color: colors.text }]}>
                     {label}{required && <Text style={styles.asterisk}>*</Text>}
                 </Text>
             )}
-            <View style={[styles.inputWrapper, !!error && styles.inputError, inputWrapperStyle]}>
+            <View style={[
+                styles.inputWrapper, 
+                { backgroundColor: colors.backgroundElement, borderColor: isDarkMode ? colors.backgroundElement : '#EAEAEA' },
+                !!error && styles.inputError, 
+                inputWrapperStyle
+            ]}>
                 {leftIcon && <View style={styles.leftIcon}>{leftIcon}</View>}
                 <TextInput
-                    style={[styles.input, style]}
-                    placeholderTextColor="#999"
+                    style={[styles.input, { color: colors.text }, style]}
+                    placeholderTextColor={colors.textSecondary}
                     {...props}
                 />
                 {rightIcon && <View style={styles.rightIcon}>{rightIcon}</View>}

@@ -106,7 +106,6 @@ export function clearStorageDataOnLogout(): void {
         STORAGE_KEYS.AUTHORITIES_TOKEN,
         STORAGE_KEYS.PROFILE,
         STORAGE_KEYS.IS_SETUP_BIOMETRIC,
-        STORAGE_KEYS.PCL75YWWDB,
         STORAGE_KEYS.I9WJ1B85A8,
         STORAGE_KEYS.TENANT_ID,
     ]);

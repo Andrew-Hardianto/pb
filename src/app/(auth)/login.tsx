@@ -12,6 +12,7 @@ import { isIOS } from '@/utils/platform';
 import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { jwtDecode } from 'jwt-decode';
+import { useTheme } from '@/hooks/useTheme';
 import React, { useEffect, useState } from 'react';
 import {
     Image,
@@ -28,6 +29,8 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function LoginScreen() {
+    const { colors, isDarkMode } = useTheme();
+    
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [passwordVisible, setPasswordVisible] = useState(false);
@@ -228,7 +231,7 @@ export default function LoginScreen() {
     };
 
     return (
-        <SafeAreaView style={styles.safeArea}>
+        <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.background }]}>
             <KeyboardAvoidingView
                 style={styles.keyboardView}
                 behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -238,8 +241,8 @@ export default function LoginScreen() {
                     {/* Header */}
                     <View style={styles.headerContainer}>
                         <View style={styles.headerTextContainer}>
-                            <Text style={styles.title}>Selamat Datang!</Text>
-                            <Text style={styles.subtitle}>Silahkan masuk dan melanjutkan aktivitas</Text>
+                            <Text style={[styles.title, { color: colors.text }]}>Selamat Datang!</Text>
+                            <Text style={[styles.subtitle, { color: colors.textSecondary }]}>Silahkan masuk dan melanjutkan aktivitas</Text>
                         </View>
                         <Image
                             source={require('@/assets/pacificbike.png')}
@@ -259,7 +262,7 @@ export default function LoginScreen() {
                             autoCapitalize="none"
                             value={email}
                             onChangeText={setEmail}
-                            leftIcon={<Feather name="mail" size={20} color="#111" />}
+                            leftIcon={<Feather name="mail" size={20} color={colors.text} />}
                         />
 
                         {/* Password Input */}
@@ -270,7 +273,7 @@ export default function LoginScreen() {
                             secureTextEntry={!passwordVisible}
                             value={password}
                             onChangeText={setPassword}
-                            leftIcon={<Feather name="lock" size={20} color="#111" />}
+                            leftIcon={<Feather name="lock" size={20} color={colors.text} />}
                             rightIcon={
                                 <TouchableOpacity
                                     onPress={() => setPasswordVisible(!passwordVisible)}
@@ -279,7 +282,7 @@ export default function LoginScreen() {
                                     <Feather
                                         name={passwordVisible ? "eye" : "eye-off"}
                                         size={20}
-                                        color="#111"
+                                        color={colors.text}
                                     />
                                 </TouchableOpacity>
                             }
@@ -291,9 +294,9 @@ export default function LoginScreen() {
                                 <MaterialCommunityIcons 
                                     name={rememberMe ? "checkbox-marked" : "checkbox-blank-outline"} 
                                     size={20} 
-                                    color={rememberMe ? "#E62129" : "#666"} 
+                                    color={rememberMe ? "#E62129" : colors.textSecondary} 
                                 />
-                                <Text style={styles.rememberMeText}>Ingat Saya</Text>
+                                <Text style={[styles.rememberMeText, { color: colors.textSecondary }]}>Ingat Saya</Text>
                             </TouchableOpacity>
 
                             {/* Forgot Password */}
@@ -322,9 +325,9 @@ export default function LoginScreen() {
 
                         {/* Divider */}
                         <View style={styles.dividerContainer}>
-                            <View style={styles.dividerLine} />
-                            <Text style={styles.dividerText}>Atau</Text>
-                            <View style={styles.dividerLine} />
+                            <View style={[styles.dividerLine, isDarkMode && { backgroundColor: colors.backgroundElement }]} />
+                            <Text style={[styles.dividerText, { color: colors.textSecondary }]}>Atau</Text>
+                            <View style={[styles.dividerLine, isDarkMode && { backgroundColor: colors.backgroundElement }]} />
                         </View>
 
                         {/* Register Link */}
@@ -339,11 +342,11 @@ export default function LoginScreen() {
 
                     {/* Footer Banner */}
                     {guideBookUrl ? (
-                        <View style={styles.footerBanner}>
+                        <View style={[styles.footerBanner, { backgroundColor: isDarkMode ? colors.backgroundElement : '#FAFAFA' }]}>
                             <View style={styles.bannerIconContainer}>
                                 <Feather name="file-text" size={20} color="#E62129" />
                             </View>
-                            <Text style={styles.bannerText}>
+                            <Text style={[styles.bannerText, { color: colors.text }]}>
                                 Unduh buku panduan untuk mempelajari cara menggunakan aplikasi sebelum memulai.
                             </Text>
                             <TouchableOpacity style={styles.downloadButton} onPress={handleDownloadGuideBook}>

@@ -5,6 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import React from 'react';
 import ContentLoader, { Rect } from "react-content-loader/native";
 import { StyleSheet, Text, View } from 'react-native';
+import { useTheme } from '@/hooks/useTheme';
 
 const fetchDashboardData = async () => {
     const { data } = await axiosInstance.get('/api/mobile/v1/dashboard');
@@ -16,6 +17,8 @@ const WarrantyInfo = () => {
         queryKey: ['dashboard'],
         queryFn: fetchDashboardData,
     });
+    
+    const { colors, isDarkMode } = useTheme();
 
     const warrantyData = [
         {
@@ -45,13 +48,13 @@ const WarrantyInfo = () => {
     ];
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.sectionTitle}>Info Garansi</Text>
+        <View style={[styles.container, { backgroundColor: colors.background }]}>
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>Info Garansi</Text>
             {isLoading ? (
                 <View style={styles.cardsContainer}>
                     {[1, 2, 3].map((item) => (
-                        <View key={item} style={[styles.card, { borderBottomColor: '#E0E0E0' }]}>
-                            <ContentLoader viewBox="0 0 100 80" width="100%" height={80}>
+                        <View key={item} style={[styles.card, { borderBottomColor: isDarkMode ? colors.backgroundSelected : '#E0E0E0', backgroundColor: colors.backgroundElement }]}>
+                            <ContentLoader viewBox="0 0 100 80" width="100%" height={80} backgroundColor={isDarkMode ? colors.backgroundSelected : "#f3f3f3"} foregroundColor={isDarkMode ? colors.textSecondary : "#ecebeb"}>
                                 <Rect x="0" y="0" rx="8" ry="8" width="32" height="32" />
                                 <Rect x="0" y="44" rx="4" ry="4" width="60" height="12" />
                                 <Rect x="0" y="60" rx="4" ry="4" width="40" height="20" />
@@ -66,15 +69,15 @@ const WarrantyInfo = () => {
                             key={item.id}
                             style={[
                                 styles.card,
-                                { borderBottomColor: item.color }
+                                { borderBottomColor: item.color, backgroundColor: isDarkMode ? colors.backgroundElement : '#FFFFFF' }
                             ]}
                         >
-                            <View style={[styles.iconContainer, { backgroundColor: item.bgColor }]}>
+                            <View style={[styles.iconContainer, { backgroundColor: isDarkMode ? '#222' : item.bgColor }]}>
                                 <Feather name={item.iconName as any} size={16} color={item.color} />
                             </View>
                             <View style={styles.textContainer}>
-                                <Text style={styles.title}>{item.title}</Text>
-                                <Text style={styles.count}>{item.count}</Text>
+                                <Text style={[styles.title, { color: colors.textSecondary }]}>{item.title}</Text>
+                                <Text style={[styles.count, { color: colors.text }]}>{item.count}</Text>
                             </View>
                         </View>
                     ))}

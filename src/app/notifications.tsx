@@ -10,6 +10,7 @@ import React, { useMemo } from 'react';
 import { ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ContentLoader, { Rect } from "react-content-loader/native";
+import { useTheme } from '@/hooks/useTheme';
 
 interface NotificationItem {
   id: string;
@@ -26,25 +27,29 @@ const fetchNotifications = async ({ pageParam = 0 }) => {
   return data;
 };
 
-const NotificationSkeleton = () => (
-  <View style={styles.notificationCard}>
-    <View style={[styles.iconContainer, { backgroundColor: 'transparent' }]}>
-      <ContentLoader viewBox="0 0 40 40" width={40} height={40} backgroundColor="#f3f3f3" foregroundColor="#ecebeb">
-        <Rect x="0" y="0" rx="8" ry="8" width="40" height="40" />
-      </ContentLoader>
+const NotificationSkeleton = () => {
+  const { colors, isDarkMode } = useTheme();
+  return (
+    <View style={[styles.notificationCard, { borderBottomColor: isDarkMode ? colors.backgroundSelected : '#F0F0F0' }]}>
+      <View style={[styles.iconContainer, { backgroundColor: 'transparent' }]}>
+        <ContentLoader viewBox="0 0 40 40" width={40} height={40} backgroundColor={isDarkMode ? colors.backgroundElement : "#f3f3f3"} foregroundColor={isDarkMode ? colors.backgroundSelected : "#ecebeb"}>
+          <Rect x="0" y="0" rx="8" ry="8" width="40" height="40" />
+        </ContentLoader>
+      </View>
+      <View style={styles.textContainer}>
+        <ContentLoader viewBox="0 0 250 55" width="100%" height={55} backgroundColor={isDarkMode ? colors.backgroundElement : "#f3f3f3"} foregroundColor={isDarkMode ? colors.backgroundSelected : "#ecebeb"}>
+          <Rect x="0" y="4" rx="4" ry="4" width="150" height="14" />
+          <Rect x="0" y="26" rx="4" ry="4" width="250" height="12" />
+          <Rect x="0" y="44" rx="4" ry="4" width="40" height="10" />
+        </ContentLoader>
+      </View>
     </View>
-    <View style={styles.textContainer}>
-      <ContentLoader viewBox="0 0 250 55" width="100%" height={55} backgroundColor="#f3f3f3" foregroundColor="#ecebeb">
-        <Rect x="0" y="4" rx="4" ry="4" width="150" height="14" />
-        <Rect x="0" y="26" rx="4" ry="4" width="250" height="12" />
-        <Rect x="0" y="44" rx="4" ry="4" width="40" height="10" />
-      </ContentLoader>
-    </View>
-  </View>
-);
+  );
+};
 
 export default function NotificationsScreen() {
   const router = useRouter();
+  const { colors, isDarkMode } = useTheme();
 
   const {
     data,
@@ -102,16 +107,16 @@ export default function NotificationsScreen() {
     return (
       <View>
         {showHeader && (
-          <Text style={styles.dateHeader}>{dateString}</Text>
+          <Text style={[styles.dateHeader, { color: colors.textSecondary }]}>{dateString}</Text>
         )}
-        <View style={styles.notificationCard}>
-          <View style={styles.iconContainer}>
+        <View style={[styles.notificationCard, { borderBottomColor: isDarkMode ? colors.backgroundSelected : '#F0F0F0' }]}>
+          <View style={[styles.iconContainer, { backgroundColor: isDarkMode ? '#2A1C1C' : '#FFF0F0' }]}>
             {renderIcon(item.notificationCategory)}
           </View>
           <View style={styles.textContainer}>
-            <Text style={[styles.title, isRedTitle && { color: Colors.danger }]}>{item.notificationTitle}</Text>
-            <Text style={styles.message}>{item.notificationRemark}</Text>
-            <Text style={styles.time}>{format(date, 'HH:mm')}</Text>
+            <Text style={[styles.title, { color: colors.text }, isRedTitle && { color: Colors.danger }]}>{item.notificationTitle}</Text>
+            <Text style={[styles.message, { color: colors.textSecondary }]}>{item.notificationRemark}</Text>
+            <Text style={[styles.time, { color: colors.textSecondary }]}>{format(date, 'HH:mm')}</Text>
           </View>
         </View>
       </View>
@@ -119,17 +124,17 @@ export default function NotificationsScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
-      <View style={styles.header}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
+      <View style={[styles.header, { backgroundColor: colors.background, borderBottomColor: isDarkMode ? colors.backgroundSelected : '#F0F0F0' }]}>
         <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-          <Feather name="arrow-left" size={24} color="#000" />
+          <Feather name="arrow-left" size={24} color={colors.text} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Notifikasi</Text>
+        <Text style={[styles.headerTitle, { color: colors.text }]}>Notifikasi</Text>
       </View>
       
       {isLoading ? (
         <View style={styles.listContent}>
-          <ContentLoader viewBox="0 0 100 20" width={100} height={20} style={{ marginTop: 20, marginBottom: 10 }} backgroundColor="#f3f3f3" foregroundColor="#ecebeb">
+          <ContentLoader viewBox="0 0 100 20" width={100} height={20} style={{ marginTop: 20, marginBottom: 10 }} backgroundColor={isDarkMode ? colors.backgroundElement : "#f3f3f3"} foregroundColor={isDarkMode ? colors.backgroundSelected : "#ecebeb"}>
             <Rect x="0" y="0" rx="4" ry="4" width="80" height="12" />
           </ContentLoader>
           {[...Array(6)].map((_, i) => (
