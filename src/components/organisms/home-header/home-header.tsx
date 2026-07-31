@@ -4,6 +4,7 @@ import { Feather } from '@expo/vector-icons';
 import React from 'react';
 import ContentLoader, { Circle, Rect } from "react-content-loader/native";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Link } from 'expo-router';
 
 const HomeHeader = ({ isLoading, data }: { isLoading?: boolean; data?: any }) => {
     if (isLoading) {
@@ -42,10 +43,12 @@ const HomeHeader = ({ isLoading, data }: { isLoading?: boolean; data?: any }) =>
                 <TouchableOpacity style={styles.iconButton}>
                     <icons.userAdd width={24} height={24} />
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.iconButton}>
-                    <View style={styles.badge} />
-                    <Feather name="bell" size={20} color={Colors.danger} />
-                </TouchableOpacity>
+                <Link href="/notifications" asChild>
+                    <TouchableOpacity style={styles.iconButton}>
+                        <View style={styles.badge} />
+                        <Feather name="bell" size={20} color={Colors.danger} />
+                    </TouchableOpacity>
+                </Link>
             </View>
         </View>
     );
