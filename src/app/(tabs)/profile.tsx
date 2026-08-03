@@ -13,8 +13,10 @@ import { ActivityIndicator, Image, ScrollView, StyleSheet, Switch, Text, Touchab
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '@/hooks/useTheme';
 import { useAppStore } from '@/stores/appStore';
+import { useRouter, Href } from 'expo-router';
 
 export default function ProfileScreen() {
+  const router = useRouter();
   const { data: profileData, isLoading } = useQuery({
     queryKey: ['profile'],
     queryFn: async () => {
@@ -81,8 +83,8 @@ export default function ProfileScreen() {
             </View>
 
             <View style={styles.menuContainer}>
-              {renderMenuItem('Profil Saya', ProfileIcon, 'link')}
-              {renderMenuItem('Ubah Kata Sandi', LockIcon, 'link')}
+              {renderMenuItem('Profil Saya', ProfileIcon, 'link', undefined, undefined, () => router.push('/edit-profile' as any))}
+              {renderMenuItem('Ubah Kata Sandi', LockIcon, 'link', undefined, undefined, () => router.push('/change-password' as any))}
               {renderMenuItem('Sidik Jari / Scan Wajah', ScanIcon, 'switch', isBiometricEnabled, setIsBiometricEnabled)}
               {renderMenuItem('Mode Gelap', MoonIcon, 'switch', isDarkMode, setIsDarkMode)}
               {renderMenuItem('Keluar', LogoutIcon, 'link', undefined, undefined, logout)}
