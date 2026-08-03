@@ -18,6 +18,7 @@ import { usePopupStore } from '@/stores/popupStore';
 import { verifyBiometric } from '@/services/biometric.service';
 import { getSecure, setSecure, removeSecure } from '@/services/storage.service';
 import { STORAGE_KEYS } from '@/constants/data';
+import { Skeleton } from '@/components/atoms/skeleton';
 import { useRouter, Href } from 'expo-router';
 
 export default function ProfileScreen() {
@@ -93,7 +94,32 @@ export default function ProfileScreen() {
 
       <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         {isLoading ? (
-          <ActivityIndicator size="large" color={Colors.danger} style={{ marginTop: 50 }} />
+          <View style={{ marginTop: 20 }}>
+            <View style={[styles.profileCard, { backgroundColor: isDarkMode ? colors.backgroundElement : '#FFF' }]}>
+                <Skeleton width={'100%'} height={120} style={{ borderTopLeftRadius: 16, borderTopRightRadius: 16, borderRadius: 0 }} />
+                <View style={styles.profileInfoContainer}>
+                    <View style={styles.avatarWrapper}>
+                        <Skeleton width={60} height={60} borderRadius={30} style={{ borderWidth: 3, borderColor: isDarkMode ? colors.backgroundElement : '#FFF' }} />
+                    </View>
+                    <View style={styles.profileTexts}>
+                        <Skeleton width={150} height={18} style={{ marginBottom: 6 }} />
+                        <Skeleton width={200} height={14} />
+                    </View>
+                </View>
+            </View>
+            
+            <View style={styles.menuContainer}>
+                {[1, 2, 3, 4, 5].map(key => (
+                    <View key={key} style={[styles.menuItem, { backgroundColor: isDarkMode ? colors.backgroundElement : '#FFF' }]}>
+                        <Skeleton width={40} height={40} borderRadius={8} style={{ marginRight: 15 }} />
+                        <View style={{ flex: 1 }}>
+                            <Skeleton width={120} height={16} />
+                        </View>
+                        <Skeleton width={24} height={24} />
+                    </View>
+                ))}
+            </View>
+          </View>
         ) : (
           <>
             <View style={[styles.profileCard, { backgroundColor: isDarkMode ? colors.backgroundElement : '#FFF' }]}>

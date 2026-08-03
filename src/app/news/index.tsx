@@ -3,6 +3,7 @@ import { Feather } from '@expo/vector-icons';
 import { useQuery } from '@tanstack/react-query';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
+import { Skeleton } from '@/components/atoms/skeleton';
 import React from 'react';
 import { ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -48,8 +49,14 @@ export default function NewsScreen() {
             </View>
 
             {isLoading ? (
-                <View style={styles.loadingContainer}>
-                    <ActivityIndicator size="large" color="#000" />
+                <View style={styles.listContainer}>
+                    {[1, 2, 3].map(key => (
+                        <View key={key} style={styles.newsCard}>
+                            <Skeleton width={'100%'} height={180} style={{ borderRadius: 12 }} />
+                            <Skeleton width={'80%'} height={20} style={{ marginTop: 12, marginBottom: 4 }} />
+                            <Skeleton width={'60%'} height={20} />
+                        </View>
+                    ))}
                 </View>
             ) : (
                 <FlatList

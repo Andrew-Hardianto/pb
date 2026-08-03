@@ -21,6 +21,7 @@ import { useTheme } from '@/hooks/useTheme';
 import { Input } from '@/components/atoms/input';
 import { Select } from '@/components/atoms/select';
 import { Button } from '@/components/atoms/button';
+import { Skeleton } from '@/components/atoms/skeleton';
 import { uploadPicture } from '@/services/upload.service';
 
 export default function EditProfileScreen() {
@@ -137,7 +138,30 @@ export default function EditProfileScreen() {
   if (isLoading) {
     return (
       <SafeAreaView style={[styles.container, { backgroundColor: isDarkMode ? colors.background : '#FAFAFA' }]}>
-        <ActivityIndicator size="large" color="#E62129" style={{ marginTop: 50 }} />
+        <View style={[styles.header, { backgroundColor: isDarkMode ? colors.backgroundElement : '#FFF' }]}>
+          <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+            <Feather name="arrow-left" size={24} color={isDarkMode ? '#FFF' : '#111'} />
+          </TouchableOpacity>
+          <Text style={[styles.headerTitle, { color: isDarkMode ? '#FFF' : '#111' }]}>Pengaturan Profil</Text>
+        </View>
+        <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
+          <View style={styles.content}>
+            <View style={styles.imagesContainer}>
+              <Skeleton width={'100%'} height={150} style={{ borderRadius: 16 }} />
+              <View style={styles.profileWrapper}>
+                <Skeleton width={80} height={80} borderRadius={40} style={{ borderWidth: 4, borderColor: isDarkMode ? colors.background : '#FAFAFA' }} />
+              </View>
+            </View>
+            <View style={[styles.formContainer, { backgroundColor: isDarkMode ? colors.backgroundElement : '#FFF' }]}>
+              <Skeleton width={100} height={14} style={{ marginBottom: 8 }} />
+              <Skeleton width={'100%'} height={52} style={{ marginBottom: 20 }} />
+              <Skeleton width={100} height={14} style={{ marginBottom: 8 }} />
+              <Skeleton width={'100%'} height={52} style={{ marginBottom: 20 }} />
+              <Skeleton width={100} height={14} style={{ marginBottom: 8 }} />
+              <Skeleton width={'100%'} height={52} style={{ marginBottom: 20 }} />
+            </View>
+          </View>
+        </ScrollView>
       </SafeAreaView>
     );
   }
