@@ -8,11 +8,16 @@ import { logout } from '@/services/main-service.service';
 import { axiosInstance } from '@/lib/axiosInstance';
 import { Feather } from '@expo/vector-icons';
 import { useQuery } from '@tanstack/react-query';
-import React, { useState } from 'react';
-import { ActivityIndicator, Image, ScrollView, StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { ActivityIndicator, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '@/hooks/useTheme';
+import { CustomSwitch } from '@/components/atoms/switch';
 import { useAppStore } from '@/stores/appStore';
+import { usePopupStore } from '@/stores/popupStore';
+import { verifyBiometric } from '@/services/biometric.service';
+import { getSecure, setSecure, removeSecure } from '@/services/storage.service';
+import { STORAGE_KEYS } from '@/constants/data';
 import { useRouter, Href } from 'expo-router';
 
 export default function ProfileScreen() {
@@ -28,6 +33,37 @@ export default function ProfileScreen() {
   const [isBiometricEnabled, setIsBiometricEnabled] = useState(false);
   const { colors, isDarkMode } = useTheme();
   const setIsDarkMode = useAppStore(state => state.setIsDarkMode);
+  const popup = usePopupStore();
+
+  useEffect(() => {
+    getSecure(STORAGE_KEYS.IS_SETUP_BIOMETRIC).then(val => {
+      if (val === '1') {
+        setIsBiometricEnabled(true);
+      }
+    });
+  }, []);
+
+  const handleBiometricToggle = (val: boolean) => {
+    if (val) {
+      popup.show({
+        type: 'confirm',
+        title: 'Aktivasi Sidik Jari',
+        message: 'Aktifkan sidik jari untuk akses yang lebih cepat dan aman ke akun Anda.',
+        primaryButtonText: 'Aktifkan',
+        secondaryButtonText: 'Batalkan',
+        onPrimaryPress: async () => {
+          const success = await verifyBiometric();
+          if (success) {
+            setIsBiometricEnabled(true);
+            await setSecure(STORAGE_KEYS.IS_SETUP_BIOMETRIC, '1');
+          }
+        },
+      });
+    } else {
+      setIsBiometricEnabled(false);
+      removeSecure(STORAGE_KEYS.IS_SETUP_BIOMETRIC);
+    }
+  };
 
   const renderMenuItem = (title: string, Icon: any, type: 'link' | 'switch', value?: boolean, onValueChange?: (val: boolean) => void, onPress?: () => void) => {
     return (
@@ -39,11 +75,9 @@ export default function ProfileScreen() {
         {type === 'link' ? (
           <Feather name="chevron-right" size={24} color={colors.text} />
         ) : (
-          <Switch
-            value={value}
-            onValueChange={onValueChange}
-            trackColor={{ false: '#E5E5EA', true: Colors.danger }}
-            thumbColor={'#FFFFFF'}
+          <CustomSwitch
+            value={value || false}
+            onValueChange={onValueChange!}
           />
         )}
       </TouchableOpacity>
@@ -85,7 +119,7 @@ export default function ProfileScreen() {
             <View style={styles.menuContainer}>
               {renderMenuItem('Profil Saya', ProfileIcon, 'link', undefined, undefined, () => router.push('/edit-profile' as any))}
               {renderMenuItem('Ubah Kata Sandi', LockIcon, 'link', undefined, undefined, () => router.push('/change-password' as any))}
-              {renderMenuItem('Sidik Jari / Scan Wajah', ScanIcon, 'switch', isBiometricEnabled, setIsBiometricEnabled)}
+              {renderMenuItem('Sidik Jari / Scan Wajah', ScanIcon, 'switch', isBiometricEnabled, handleBiometricToggle)}
               {renderMenuItem('Mode Gelap', MoonIcon, 'switch', isDarkMode, setIsDarkMode)}
               {renderMenuItem('Keluar', LogoutIcon, 'link', undefined, undefined, logout)}
             </View>
