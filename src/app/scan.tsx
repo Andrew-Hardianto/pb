@@ -107,7 +107,7 @@ export default function ScanScreen() {
                         <View style={styles.actionCard}>
                             <Text style={styles.atauText}>atau</Text>
                             
-                            <TouchableOpacity style={styles.btnOutline}>
+                            <TouchableOpacity style={styles.btnOutline} onPress={() => router.push('/manual-input')}>
                                 <Text style={styles.btnOutlineText}>Input Manual Nomor Kupon</Text>
                             </TouchableOpacity>
                             
