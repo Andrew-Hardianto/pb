@@ -8,7 +8,7 @@
     "scheme": "pb",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "icon": "./assets/icon.png",
+      "icon": "./assets/images/icon.png",
       "bundleIdentifier": "com.git.pacificbike"
     },
     "android": {
@@ -45,6 +45,18 @@
             "./assets/fonts/DMSans-Medium.ttf",
             "./assets/fonts/DMSans-ExtraBold.ttf"
           ]
+        }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow Pacific Bike to access your camera to scan QR codes."
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow Pacific Bike to access your photos to upload QR code images."
         }
       ]
     ],

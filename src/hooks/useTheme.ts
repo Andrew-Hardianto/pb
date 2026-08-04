@@ -1,4 +1,4 @@
-import { Colors, ThemeColor } from '@/constants/theme';
+import { Colors } from '@/constants/theme';
 import { useAppStore } from '@/stores/appStore';
 import { useMemo } from 'react';
 

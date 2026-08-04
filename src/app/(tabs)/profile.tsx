@@ -3,23 +3,23 @@ import LogoutIcon from '@/assets/icon/general/logout.svg';
 import MoonIcon from '@/assets/icon/general/moon.svg';
 import ProfileIcon from '@/assets/icon/general/profile.svg';
 import ScanIcon from '@/assets/icon/general/scan.svg';
-import { Colors } from '@/constants/theme';
-import { logout } from '@/services/main-service.service';
-import { axiosInstance } from '@/lib/axiosInstance';
-import { Feather } from '@expo/vector-icons';
-import { useQuery } from '@tanstack/react-query';
-import React, { useState, useEffect } from 'react';
-import { ActivityIndicator, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useTheme } from '@/hooks/useTheme';
+import { Skeleton } from '@/components/atoms/skeleton';
 import { CustomSwitch } from '@/components/atoms/switch';
+import { STORAGE_KEYS } from '@/constants/data';
+import { Colors } from '@/constants/theme';
+import { useTheme } from '@/hooks/useTheme';
+import { axiosInstance } from '@/lib/axiosInstance';
+import { verifyBiometric } from '@/services/biometric.service';
+import { logout } from '@/services/main-service.service';
+import { getSecure, removeSecure, setSecure } from '@/services/storage.service';
 import { useAppStore } from '@/stores/appStore';
 import { usePopupStore } from '@/stores/popupStore';
-import { verifyBiometric } from '@/services/biometric.service';
-import { getSecure, setSecure, removeSecure } from '@/services/storage.service';
-import { STORAGE_KEYS } from '@/constants/data';
-import { Skeleton } from '@/components/atoms/skeleton';
-import { useRouter, Href } from 'expo-router';
+import { Feather } from '@expo/vector-icons';
+import { useQuery } from '@tanstack/react-query';
+import { useRouter } from 'expo-router';
+import React, { useEffect, useState } from 'react';
+import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function ProfileScreen() {
   const router = useRouter();
@@ -96,43 +96,43 @@ export default function ProfileScreen() {
         {isLoading ? (
           <View style={{ marginTop: 20 }}>
             <View style={[styles.profileCard, { backgroundColor: isDarkMode ? colors.backgroundElement : '#FFF' }]}>
-                <Skeleton width={'100%'} height={120} style={{ borderTopLeftRadius: 16, borderTopRightRadius: 16, borderRadius: 0 }} />
-                <View style={styles.profileInfoContainer}>
-                    <View style={styles.avatarWrapper}>
-                        <Skeleton width={60} height={60} borderRadius={30} style={{ borderWidth: 3, borderColor: isDarkMode ? colors.backgroundElement : '#FFF' }} />
-                    </View>
-                    <View style={styles.profileTexts}>
-                        <Skeleton width={150} height={18} style={{ marginBottom: 6 }} />
-                        <Skeleton width={200} height={14} />
-                    </View>
+              <Skeleton width={'100%'} height={120} style={{ borderTopLeftRadius: 16, borderTopRightRadius: 16, borderRadius: 0 }} />
+              <View style={styles.profileInfoContainer}>
+                <View style={styles.avatarWrapper}>
+                  <Skeleton width={60} height={60} borderRadius={30} style={{ borderWidth: 3, borderColor: isDarkMode ? colors.backgroundElement : '#FFF' }} />
                 </View>
+                <View style={styles.profileTexts}>
+                  <Skeleton width={150} height={18} style={{ marginBottom: 6 }} />
+                  <Skeleton width={200} height={14} />
+                </View>
+              </View>
             </View>
-            
+
             <View style={styles.menuContainer}>
-                {[1, 2, 3, 4, 5].map(key => (
-                    <View key={key} style={[styles.menuItem, { backgroundColor: isDarkMode ? colors.backgroundElement : '#FFF' }]}>
-                        <Skeleton width={40} height={40} borderRadius={8} style={{ marginRight: 15 }} />
-                        <View style={{ flex: 1 }}>
-                            <Skeleton width={120} height={16} />
-                        </View>
-                        <Skeleton width={24} height={24} />
-                    </View>
-                ))}
+              {[1, 2, 3, 4, 5].map(key => (
+                <View key={key} style={[styles.menuItem, { backgroundColor: isDarkMode ? colors.backgroundElement : '#FFF' }]}>
+                  <Skeleton width={40} height={40} borderRadius={8} style={{ marginRight: 15 }} />
+                  <View style={{ flex: 1 }}>
+                    <Skeleton width={120} height={16} />
+                  </View>
+                  <Skeleton width={24} height={24} />
+                </View>
+              ))}
             </View>
           </View>
         ) : (
           <>
             <View style={[styles.profileCard, { backgroundColor: isDarkMode ? colors.backgroundElement : '#FFF' }]}>
-              <Image 
-                source={{ uri: profileData?.backgroundPicture || 'https://via.placeholder.com/350x150' }} 
-                style={styles.coverImage} 
+              <Image
+                source={{ uri: profileData?.backgroundPicture || 'https://via.placeholder.com/350x150' }}
+                style={styles.coverImage}
                 resizeMode="cover"
               />
               <View style={styles.profileInfoContainer}>
                 <View style={styles.avatarWrapper}>
-                  <Image 
-                    source={{ uri: profileData?.profilePicture || 'https://via.placeholder.com/100' }} 
-                    style={[styles.profileImage, { borderColor: isDarkMode ? colors.backgroundElement : '#FFF' }]} 
+                  <Image
+                    source={{ uri: profileData?.profilePicture || 'https://via.placeholder.com/100' }}
+                    style={[styles.profileImage, { borderColor: isDarkMode ? colors.backgroundElement : '#FFF' }]}
                   />
                 </View>
                 <View style={styles.profileTexts}>

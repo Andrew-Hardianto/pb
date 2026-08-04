@@ -2,7 +2,9 @@ import HomeAddress from '@/components/molecules/home-address/home-address';
 import HomePoints from '@/components/molecules/home-points/home-points';
 import HomeHeader from '@/components/organisms/home-header/home-header';
 import NewsCarousel from '@/components/organisms/news-carousel/news-carousel';
+import TermsConditionsModal from '@/components/organisms/terms-conditions-modal/terms-conditions-modal';
 import WarrantyInfo from '@/components/organisms/warranty-info/warranty-info';
+import { useTheme } from '@/hooks/useTheme';
 import { axiosInstance } from '@/lib/axiosInstance';
 import { decrypt, encrypt } from '@/services/crypto.service';
 import { postUrlApi } from '@/services/http.service';
@@ -12,8 +14,6 @@ import * as Application from 'expo-application';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Platform, RefreshControl, ScrollView, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useTheme } from '@/hooks/useTheme';
-import TermsConditionsModal from '@/components/organisms/terms-conditions-modal/terms-conditions-modal';
 
 const fetchProfileData = async () => {
     const { data } = await axiosInstance.get('/api/mobile/v1/profile');
@@ -120,11 +120,11 @@ function HomeScreen() {
                 <NewsCarousel />
                 <WarrantyInfo />
             </ScrollView>
-            
-            <TermsConditionsModal 
-                visible={isTCModalVisible} 
-                data={termConditionsData} 
-                onSubmit={submitTC} 
+
+            <TermsConditionsModal
+                visible={isTCModalVisible}
+                data={termConditionsData}
+                onSubmit={submitTC}
             />
         </SafeAreaView>
     )

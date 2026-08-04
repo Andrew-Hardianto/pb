@@ -1,11 +1,11 @@
 import { Colors } from '@/constants/theme';
+import { useTheme } from '@/hooks/useTheme';
 import { axiosInstance } from '@/lib/axiosInstance';
 import { Feather } from '@expo/vector-icons';
 import { useQuery } from '@tanstack/react-query';
 import React from 'react';
 import ContentLoader, { Rect } from "react-content-loader/native";
 import { StyleSheet, Text, View } from 'react-native';
-import { useTheme } from '@/hooks/useTheme';
 
 const fetchDashboardData = async () => {
     const { data } = await axiosInstance.get('/api/mobile/v1/dashboard');
@@ -17,7 +17,7 @@ const WarrantyInfo = () => {
         queryKey: ['dashboard'],
         queryFn: fetchDashboardData,
     });
-    
+
     const { colors, isDarkMode } = useTheme();
 
     const warrantyData = [
@@ -48,7 +48,7 @@ const WarrantyInfo = () => {
     ];
 
     return (
-        <View style={[styles.container, { backgroundColor: colors.background }]}>
+        <View style={[styles.container]}>
             <Text style={[styles.sectionTitle, { color: colors.text }]}>Info Garansi</Text>
             {isLoading ? (
                 <View style={styles.cardsContainer}>

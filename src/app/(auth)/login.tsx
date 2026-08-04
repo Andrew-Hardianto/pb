@@ -1,18 +1,18 @@
 import { Button } from '@/components/atoms/button';
 import { Input } from '@/components/atoms/input';
 import { STORAGE_KEYS } from '@/constants/data';
+import { useTheme } from '@/hooks/useTheme';
 import { checkBiometricAvailability, verifyBiometric } from '@/services/biometric.service';
 import { decrypt, encrypt } from '@/services/crypto.service';
 import { getUrlApi, postUrlApi } from '@/services/http.service';
 import { dismissLoading, presentLoading } from '@/services/main-service.service';
 import { getSecure, removeSecure, setSecure } from '@/services/storage.service';
 import { showPopup } from '@/stores/popupStore';
-import { handleHttpError } from '@/utils/httpError';
+import { handleHttpError, handleHttpErrorLogin } from '@/utils/httpError';
 import { isIOS } from '@/utils/platform';
 import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { jwtDecode } from 'jwt-decode';
-import { useTheme } from '@/hooks/useTheme';
 import React, { useEffect, useState } from 'react';
 import {
     Image,
@@ -22,7 +22,6 @@ import {
     ScrollView,
     StyleSheet,
     Text,
-    TextInput,
     TouchableOpacity,
     View
 } from 'react-native';
@@ -30,7 +29,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function LoginScreen() {
     const { colors, isDarkMode } = useTheme();
-    
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [passwordVisible, setPasswordVisible] = useState(false);
@@ -167,7 +166,7 @@ export default function LoginScreen() {
                 await dismissLoading();
             }
         } catch (error) {
-            handleHttpError(error);
+            handleHttpErrorLogin(error);
         }
     };
 
@@ -224,9 +223,8 @@ export default function LoginScreen() {
                 await dismissLoading();
             }
         } catch (error) {
-            console.log(error);
 
-            handleHttpError(error);
+            handleHttpErrorLogin(error);
         }
     };
 
@@ -291,10 +289,10 @@ export default function LoginScreen() {
                         {/* Options Row */}
                         <View style={styles.optionsRow}>
                             <TouchableOpacity style={styles.rememberMeContainer} onPress={() => setRememberMe(!rememberMe)}>
-                                <MaterialCommunityIcons 
-                                    name={rememberMe ? "checkbox-marked" : "checkbox-blank-outline"} 
-                                    size={20} 
-                                    color={rememberMe ? "#E62129" : colors.textSecondary} 
+                                <MaterialCommunityIcons
+                                    name={rememberMe ? "checkbox-marked" : "checkbox-blank-outline"}
+                                    size={20}
+                                    color={rememberMe ? "#E62129" : colors.textSecondary}
                                 />
                                 <Text style={[styles.rememberMeText, { color: colors.textSecondary }]}>Ingat Saya</Text>
                             </TouchableOpacity>
@@ -471,7 +469,7 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: '#E62129',
         textDecorationLine: 'underline',
-        textDecorationColor: '#007BFF', // Based on the user image blue underline
+        textDecorationColor: '#E62129',
     },
     spacer: {
         flex: 1,

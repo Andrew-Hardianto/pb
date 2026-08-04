@@ -11,6 +11,7 @@ import { useQuery } from '@tanstack/react-query';
 import React, { useMemo, useState } from 'react';
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { router } from 'expo-router';
 
 export default function GaransiScreen() {
     const { colors, isDarkMode } = useTheme();
@@ -42,7 +43,7 @@ export default function GaransiScreen() {
 
     const renderCard = ({ item }: { item: any }) => {
         return (
-            <View style={[styles.card, { backgroundColor: colors.backgroundElement, borderColor: isDarkMode ? colors.backgroundElement : '#EAEAEA' }]}>
+            <View style={[styles.card, { backgroundColor: colors.background, borderColor: isDarkMode ? colors.backgroundElement : '#EAEAEA' }]}>
                 {/* Header Card */}
                 <View style={styles.cardHeader}>
                     <Text style={[styles.dateText, { color: colors.textSecondary }]}>
@@ -93,50 +94,53 @@ export default function GaransiScreen() {
     return (
         <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
             {/* Main Header */}
-            <View style={styles.header}>
-                <View style={styles.headerLeft}>
-                    <WalletIcon width={24} height={24} color={Colors.danger} />
-                    <Text style={[styles.headerTitle, { color: colors.text }]}>Garansi</Text>
+            <View style={{ backgroundColor: colors.background }}>
+                <View style={styles.header}>
+                    <View style={styles.headerLeft}>
+                        <WalletIcon width={24} height={24} color={Colors.danger} />
+                        <Text style={[styles.headerTitle, { color: colors.text }]}>Garansi</Text>
+                    </View>
+                    <View style={styles.headerRight}>
+                        <TouchableOpacity style={styles.headerBtnSecondary}>
+                            <Text style={styles.headerBtnSecondaryText}>Status</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.headerBtnPrimary} onPress={() => router.push('/scan')}>
+                            <ScanIcon width={16} height={16} color={Colors.danger} />
+                            <Text style={styles.headerBtnPrimaryText}>Aktivasi</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
-                <View style={styles.headerRight}>
-                    <TouchableOpacity style={styles.headerBtnSecondary}>
-                        <Text style={styles.headerBtnSecondaryText}>Status</Text>
+
+                {/* Tabs */}
+                <View style={styles.tabContainer}>
+                    <TouchableOpacity
+                        style={[styles.tabBtn, activeTab === 'Active' ? styles.tabBtnActive : [styles.tabBtnInactive, { borderColor: isDarkMode ? colors.backgroundElement : '#EAEAEA' }]]}
+                        onPress={() => setActiveTab('Active')}
+                    >
+                        <Text style={activeTab === 'Active' ? styles.tabTextActive : [styles.tabTextInactive, { color: colors.textSecondary }]}>Aktif</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.headerBtnPrimary}>
-                        <ScanIcon width={16} height={16} color={Colors.danger} />
-                        <Text style={styles.headerBtnPrimaryText}>Aktivasi</Text>
+                    <TouchableOpacity
+                        style={[styles.tabBtn, activeTab === 'Expired' ? styles.tabBtnActive : [styles.tabBtnInactive, { borderColor: isDarkMode ? colors.backgroundElement : '#EAEAEA' }]]}
+                        onPress={() => setActiveTab('Expired')}
+                    >
+                        <Text style={activeTab === 'Expired' ? styles.tabTextActive : [styles.tabTextInactive, { color: colors.textSecondary }]}>Kadaluwarsa</Text>
                     </TouchableOpacity>
                 </View>
             </View>
 
-            {/* Tabs */}
-            <View style={styles.tabContainer}>
-                <TouchableOpacity
-                    style={[styles.tabBtn, activeTab === 'Active' ? styles.tabBtnActive : [styles.tabBtnInactive, { borderColor: isDarkMode ? colors.backgroundElement : '#EAEAEA' }]]}
-                    onPress={() => setActiveTab('Active')}
-                >
-                    <Text style={activeTab === 'Active' ? styles.tabTextActive : [styles.tabTextInactive, { color: colors.textSecondary }]}>Aktif</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={[styles.tabBtn, activeTab === 'Expired' ? styles.tabBtnActive : [styles.tabBtnInactive, { borderColor: isDarkMode ? colors.backgroundElement : '#EAEAEA' }]]}
-                    onPress={() => setActiveTab('Expired')}
-                >
-                    <Text style={activeTab === 'Expired' ? styles.tabTextActive : [styles.tabTextInactive, { color: colors.textSecondary }]}>Kadaluwarsa</Text>
-                </TouchableOpacity>
-            </View>
+            <View style={{ flex: 1, backgroundColor: colors.backgroundElement }}>
+                {/* Search Bar */}
+                <View style={styles.searchContainer}>
+                    <Input
+                        placeholder="Cari nomor rangka, kupon, atau nomor mesin..."
+                        value={searchQuery}
+                        onChangeText={setSearchQuery}
+                        leftIcon={<Feather name="search" size={20} color={colors.textSecondary} />}
+                        inputWrapperStyle={[styles.searchInput, { backgroundColor: colors.background }]}
+                    />
+                </View>
 
-            {/* Search Bar */}
-            <View style={styles.searchContainer}>
-                <Input
-                    placeholder="Cari nomor rangka, kupon, atau nomor mesin..."
-                    value={searchQuery}
-                    onChangeText={setSearchQuery}
-                    leftIcon={<Feather name="search" size={20} color={colors.textSecondary} />}
-                    inputWrapperStyle={styles.searchInput}
-                />
-            </View>
-
-            {/* List */}
+                {/* List */}
             {isLoading ? (
                 <View style={styles.listContent}>
                     {[1, 2, 3].map(key => (
@@ -188,7 +192,8 @@ export default function GaransiScreen() {
                     }
                 />
             )}
-        </SafeAreaView>
+        </View>
+    </SafeAreaView>
     );
 }
 
@@ -272,6 +277,7 @@ const styles = StyleSheet.create({
     searchContainer: {
         paddingHorizontal: 20,
         marginBottom: 5,
+        marginTop: 10,
     },
     searchInput: {
         height: 48,
