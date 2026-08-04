@@ -23,7 +23,7 @@ export default function ManualInputScreen() {
             const response = await axiosInstance.get(`/api/mobile/v1/activations/voucher/validate?voucherCode=${voucherCode}`);
             if (response.data) {
                 Alert.alert('Sukses', 'Voucher valid', [
-                    { text: 'OK', onPress: () => router.back() }
+                    { text: 'OK', onPress: () => router.push({ pathname: '/activation', params: { voucherCode } }) }
                 ]);
             }
         } catch (error: any) {

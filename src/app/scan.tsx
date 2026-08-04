@@ -27,7 +27,7 @@ export default function ScanScreen() {
             const response = await axiosInstance.get(`/api/mobile/v1/activations/voucher/validate?voucherCode=${data}`);
             if (response.data) {
                 Alert.alert('Sukses', 'Voucher valid', [
-                    { text: 'OK', onPress: () => router.back() }
+                    { text: 'OK', onPress: () => router.push({ pathname: '/activation', params: { voucherCode: data } }) }
                 ]);
             }
         } catch (error: any) {

@@ -80,7 +80,10 @@ export default function GaransiScreen() {
 
                 {/* Footer Buttons */}
                 <View style={styles.actionRow}>
-                    <TouchableOpacity style={[styles.actionBtn, styles.btnDetail]}>
+                    <TouchableOpacity 
+                        style={[styles.actionBtn, styles.btnDetail]}
+                        onPress={() => router.push({ pathname: '/activation', params: { activationId: item.id } })}
+                    >
                         <Text style={styles.btnDetailText}>Detail</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={[styles.actionBtn, styles.btnClaim]}>

@@ -58,7 +58,8 @@
         {
           "photosPermission": "Allow Pacific Bike to access your photos to upload QR code images."
         }
-      ]
+      ],
+      "@react-native-community/datetimepicker"
     ],
     "experiments": {
       "typedRoutes": true,
