@@ -4,6 +4,7 @@ import HomeHeader from '@/components/organisms/home-header/home-header';
 import NewsCarousel from '@/components/organisms/news-carousel/news-carousel';
 import TermsConditionsModal from '@/components/organisms/terms-conditions-modal/terms-conditions-modal';
 import WarrantyInfo from '@/components/organisms/warranty-info/warranty-info';
+import { STORAGE_KEYS } from '@/constants/data';
 import { useTheme } from '@/hooks/useTheme';
 import { axiosInstance } from '@/lib/axiosInstance';
 import { decrypt, encrypt } from '@/services/crypto.service';
@@ -68,8 +69,7 @@ function HomeScreen() {
         if (!identifier) return;
 
         await setSecure("uuid", encrypt(identifier));
-
-        let firebaseTokenRaw = await getSecure("C2DZDDVP4L");
+        let firebaseTokenRaw = await getSecure(STORAGE_KEYS.FIREBASE_TOKEN);
         let firebaseToken = firebaseTokenRaw ? decrypt(firebaseTokenRaw) : null;
 
         if (firebaseToken && firebaseToken.startsWith('"') && firebaseToken.endsWith('"')) {

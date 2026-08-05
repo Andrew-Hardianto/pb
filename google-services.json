@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "830081287503",
+    "project_id": "git-pacific-bike",
+    "storage_bucket": "git-pacific-bike.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:830081287503:android:c3cd7bad1c3ca8fea6313a",
+        "android_client_info": {
+          "package_name": "com.git.pacificbike"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBXquZIGyHFOZcKGuQYoutxqMY_qOXu_fY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

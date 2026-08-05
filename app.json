@@ -9,7 +9,8 @@
     "userInterfaceStyle": "automatic",
     "ios": {
       "icon": "./assets/images/icon.png",
-      "bundleIdentifier": "com.git.pacificbike"
+      "bundleIdentifier": "com.git.pacificbike",
+      "googleServicesFile": "./GoogleService-Info.plist"
     },
     "android": {
       "adaptiveIcon": {
@@ -18,7 +19,8 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "com.git.pacificbike"
+      "package": "com.git.pacificbike",
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
       "output": "static",

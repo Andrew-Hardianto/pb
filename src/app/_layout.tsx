@@ -8,6 +8,7 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import GlobalPopup from '@/components/organisms/GlobalPopup';
 import Loader from '@/components/atoms/loader';
 import { useAppStore } from '@/stores/appStore';
+import { registerForPushNotificationsAsync } from '@/lib/notifications';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -24,6 +25,7 @@ export default function RootLayout() {
   useEffect(() => {
     if (fontsLoaded || fontError) {
       SplashScreen.hideAsync();
+      registerForPushNotificationsAsync();
     }
 
   }, [fontsLoaded, fontError]);
