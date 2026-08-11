@@ -2,16 +2,17 @@ import ScanIcon from '@/assets/icon/general/scan.svg';
 import WalletIcon from '@/assets/icon/tabbar/wallet.svg';
 import { Input } from '@/components/atoms/input';
 import { Skeleton } from '@/components/atoms/skeleton';
+import { NoData } from '@/components/molecules/no-data';
 import { Colors } from '@/constants/theme';
 import { useTheme } from '@/hooks/useTheme';
 import { axiosInstance } from '@/lib/axiosInstance';
 import { formatDate, formatDateTime } from '@/utils/date';
 import { Feather } from '@expo/vector-icons';
 import { useQuery } from '@tanstack/react-query';
+import { router } from 'expo-router';
 import React, { useMemo, useState } from 'react';
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { router } from 'expo-router';
 
 export default function GaransiScreen() {
     const { colors, isDarkMode } = useTheme();
@@ -80,7 +81,7 @@ export default function GaransiScreen() {
 
                 {/* Footer Buttons */}
                 <View style={styles.actionRow}>
-                    <TouchableOpacity 
+                    <TouchableOpacity
                         style={[styles.actionBtn, styles.btnDetail]}
                         onPress={() => router.push({ pathname: '/activation', params: { activationId: item.id } })}
                     >
@@ -104,7 +105,7 @@ export default function GaransiScreen() {
                         <Text style={[styles.headerTitle, { color: colors.text }]}>Garansi</Text>
                     </View>
                     <View style={styles.headerRight}>
-                        <TouchableOpacity style={styles.headerBtnSecondary}>
+                        <TouchableOpacity style={styles.headerBtnSecondary} onPress={() => router.push('/status-klaim')}>
                             <Text style={styles.headerBtnSecondaryText}>Status</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.headerBtnPrimary} onPress={() => router.push('/scan')}>
@@ -144,59 +145,57 @@ export default function GaransiScreen() {
                 </View>
 
                 {/* List */}
-            {isLoading ? (
-                <View style={styles.listContent}>
-                    {[1, 2, 3].map(key => (
-                        <View key={key} style={[styles.card, { backgroundColor: colors.backgroundElement, borderColor: isDarkMode ? colors.backgroundElement : '#EAEAEA', marginTop: key === 1 ? 15 : 0 }]}>
-                            <View style={styles.cardHeader}>
-                                <Skeleton width={150} height={16} />
-                                <Skeleton width={60} height={24} />
-                            </View>
-                            <Skeleton width={100} height={16} style={{ marginBottom: 12 }} />
-                            <Skeleton width={160} height={16} style={{ marginBottom: 20 }} />
-
-                            <View style={styles.detailsRow}>
-                                <View style={styles.detailCol}>
-                                    <Skeleton width={80} height={12} style={{ marginBottom: 8 }} />
-                                    <Skeleton width={90} height={14} />
+                {isLoading ? (
+                    <View style={styles.listContent}>
+                        {[1, 2, 3].map(key => (
+                            <View key={key} style={[styles.card, { backgroundColor: colors.backgroundElement, borderColor: isDarkMode ? colors.backgroundElement : '#EAEAEA', marginTop: key === 1 ? 15 : 0 }]}>
+                                <View style={styles.cardHeader}>
+                                    <Skeleton width={150} height={16} />
+                                    <Skeleton width={60} height={24} />
                                 </View>
-                                <View style={[styles.detailCol, styles.colBorder, { borderLeftColor: isDarkMode ? '#444' : '#EAEAEA' }]}>
-                                    <Skeleton width={80} height={12} style={{ marginBottom: 8 }} />
-                                    <Skeleton width={90} height={14} />
-                                </View>
-                                <View style={[styles.detailCol, styles.colBorder, { borderLeftColor: isDarkMode ? '#444' : '#EAEAEA' }]}>
-                                    <Skeleton width={80} height={12} style={{ marginBottom: 8 }} />
-                                    <Skeleton width={90} height={14} />
-                                </View>
-                            </View>
+                                <Skeleton width={100} height={16} style={{ marginBottom: 12 }} />
+                                <Skeleton width={160} height={16} style={{ marginBottom: 20 }} />
 
-                            <View style={styles.engineRow}>
-                                <Skeleton width={80} height={12} style={{ marginBottom: 8 }} />
-                                <Skeleton width={120} height={14} />
-                            </View>
+                                <View style={styles.detailsRow}>
+                                    <View style={styles.detailCol}>
+                                        <Skeleton width={80} height={12} style={{ marginBottom: 8 }} />
+                                        <Skeleton width={90} height={14} />
+                                    </View>
+                                    <View style={[styles.detailCol, styles.colBorder, { borderLeftColor: isDarkMode ? '#444' : '#EAEAEA' }]}>
+                                        <Skeleton width={80} height={12} style={{ marginBottom: 8 }} />
+                                        <Skeleton width={90} height={14} />
+                                    </View>
+                                    <View style={[styles.detailCol, styles.colBorder, { borderLeftColor: isDarkMode ? '#444' : '#EAEAEA' }]}>
+                                        <Skeleton width={80} height={12} style={{ marginBottom: 8 }} />
+                                        <Skeleton width={90} height={14} />
+                                    </View>
+                                </View>
 
-                            <View style={styles.actionRow}>
-                                <Skeleton width={'48%'} height={40} />
-                                <Skeleton width={'48%'} height={40} />
+                                <View style={styles.engineRow}>
+                                    <Skeleton width={80} height={12} style={{ marginBottom: 8 }} />
+                                    <Skeleton width={120} height={14} />
+                                </View>
+
+                                <View style={styles.actionRow}>
+                                    <Skeleton width={'48%'} height={40} />
+                                    <Skeleton width={'48%'} height={40} />
+                                </View>
                             </View>
-                        </View>
-                    ))}
-                </View>
-            ) : (
-                <FlatList
-                    data={filteredActivations}
-                    keyExtractor={(item, index) => item.id || index.toString()}
-                    renderItem={renderCard}
-                    contentContainerStyle={styles.listContent}
-                    ListEmptyComponent={
-                        <View style={styles.centerBox}>
-                            <Text style={{ color: colors.textSecondary }}>Tidak ada data ditemukan.</Text>
-                        </View>
-                    }
-                />
-            )}
-        </View>
-    </SafeAreaView>
+                        ))}
+                    </View>
+                ) : (
+                    <FlatList
+                        data={filteredActivations}
+                        keyExtractor={(item, index) => item.id || index.toString()}
+                        renderItem={renderCard}
+                        contentContainerStyle={styles.listContent}
+                        ListEmptyComponent={
+                            <NoData />
+                        }
+                    />
+                )}
+            </View>
+        </SafeAreaView>
     );
 }
 
