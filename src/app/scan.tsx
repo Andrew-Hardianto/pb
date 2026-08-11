@@ -1,6 +1,8 @@
 import { Colors } from '@/constants/theme';
 import { useTheme } from '@/hooks/useTheme';
 import { axiosInstance } from '@/lib/axiosInstance';
+import { handleHttpError } from '@/utils/httpError';
+import { showPopup } from '@/stores/popupStore';
 import { Camera, CameraView } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
 import { router, Stack } from 'expo-router';
@@ -26,12 +28,16 @@ export default function ScanScreen() {
         try {
             const response = await axiosInstance.get(`/api/mobile/v1/activations/voucher/validate?voucherCode=${data}`);
             if (response.data) {
-                Alert.alert('Sukses', 'Voucher valid', [
-                    { text: 'OK', onPress: () => router.push({ pathname: '/activation', params: { voucherCode: data } }) }
-                ]);
+                showPopup({
+                    type: 'success',
+                    title: 'Sukses',
+                    message: response.data?.message || 'Voucher valid',
+                    primaryButtonText: 'OK',
+                    onPrimaryPress: () => router.push({ pathname: '/activation', params: { voucherCode: data } })
+                });
             }
         } catch (error: any) {
-            Alert.alert('Error', error?.response?.data?.message || 'Gagal memvalidasi voucher');
+            handleHttpError(error);
             setTimeout(() => setScanned(false), 2000); // Allow scanning again after 2 seconds
         }
     };
@@ -39,7 +45,12 @@ export default function ScanScreen() {
     const handleUploadGallery = async () => {
         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
         if (status !== 'granted') {
-            Alert.alert('Izin Ditolak', 'Dibutuhkan izin akses galeri untuk mengupload foto.');
+            showPopup({
+                type: 'error',
+                title: 'Izin Ditolak',
+                message: 'Dibutuhkan izin akses galeri untuk mengupload foto.',
+                primaryButtonText: 'Tutup'
+            });
             return;
         }
 
@@ -53,7 +64,12 @@ export default function ScanScreen() {
             // Here you would normally process the image to read the QR code
             // But since expo-camera's scanner doesn't have an API to scan an image directly,
             // You might need a different library or backend endpoint for image upload.
-            Alert.alert('Info', 'Fitur upload foto masih dalam pengembangan');
+            showPopup({
+                type: 'success',
+                title: 'Info',
+                message: 'Fitur upload foto masih dalam pengembangan',
+                primaryButtonText: 'Tutup'
+            });
         }
     };
 

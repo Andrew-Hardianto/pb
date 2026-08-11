@@ -5,6 +5,7 @@ import { useTheme } from '@/hooks/useTheme';
 import { axiosInstance } from '@/lib/axiosInstance';
 import { formatDate } from '@/utils/date';
 import { handleHttpError } from '@/utils/httpError';
+import { showPopup } from '@/stores/popupStore';
 import { Feather } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { format } from 'date-fns';
@@ -114,7 +115,12 @@ export default function ActivationScreen() {
 
     const handleSubmit = async () => {
         if (isInvoiceRequired && (!form.invoiceNo.trim() || !form.invoiceFile)) {
-            Alert.alert('Error', 'Nomor Invoice dan File Invoice wajib diisi');
+            showPopup({
+                type: 'error',
+                title: 'Error',
+                message: 'Nomor Invoice dan File Invoice wajib diisi',
+                primaryButtonText: 'Tutup'
+            });
             return;
         }
 
@@ -151,12 +157,16 @@ export default function ActivationScreen() {
             });
 
             if (response.status === 200 || response.status === 201) {
-                Alert.alert('Sukses', 'Aktivasi garansi berhasil', [
-                    { text: 'OK', onPress: () => router.navigate('/(tabs)/home') }
-                ]);
+                showPopup({
+                    type: 'success',
+                    title: 'Sukses',
+                    message: response.data?.message || 'Aktivasi garansi berhasil',
+                    primaryButtonText: 'OK',
+                    onPrimaryPress: () => router.navigate('/(tabs)/home')
+                });
             }
         } catch (error: any) {
-            Alert.alert('Error', error?.response?.data?.message || 'Gagal aktivasi garansi');
+            handleHttpError(error);
         } finally {
             setIsLoading(false);
         }

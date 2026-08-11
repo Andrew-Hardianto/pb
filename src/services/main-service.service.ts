@@ -142,3 +142,10 @@ export async function logout(): Promise<void> {
         }, 500);
     }
 }
+
+export function filterByCategory(data: any[], categories: string[]) {
+    if (data && data.length > 0) {
+        return data.filter(item => categories.includes(item.category));
+    }
+    return [];
+}

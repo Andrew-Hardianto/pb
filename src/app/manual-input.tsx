@@ -2,6 +2,8 @@ import { Button } from '@/components/atoms/button';
 import { Input } from '@/components/atoms/input';
 import { useTheme } from '@/hooks/useTheme';
 import { axiosInstance } from '@/lib/axiosInstance';
+import { handleHttpError } from '@/utils/httpError';
+import { showPopup } from '@/stores/popupStore';
 import { Feather } from '@expo/vector-icons';
 import { router, Stack } from 'expo-router';
 import React, { useState } from 'react';
@@ -14,7 +16,12 @@ export default function ManualInputScreen() {
 
     const handleVerify = async () => {
         if (!voucherCode.trim()) {
-            Alert.alert('Info', 'Mohon masukkan nomor kupon');
+            showPopup({
+                type: 'error',
+                title: 'Info',
+                message: 'Mohon masukkan nomor kupon',
+                primaryButtonText: 'Tutup'
+            });
             return;
         }
 
@@ -22,12 +29,16 @@ export default function ManualInputScreen() {
         try {
             const response = await axiosInstance.get(`/api/mobile/v1/activations/voucher/validate?voucherCode=${voucherCode}`);
             if (response.data) {
-                Alert.alert('Sukses', 'Voucher valid', [
-                    { text: 'OK', onPress: () => router.push({ pathname: '/activation', params: { voucherCode } }) }
-                ]);
+                showPopup({
+                    type: 'success',
+                    title: 'Sukses',
+                    message: response.data?.message || 'Voucher valid',
+                    primaryButtonText: 'OK',
+                    onPrimaryPress: () => router.push({ pathname: '/activation', params: { voucherCode } })
+                });
             }
         } catch (error: any) {
-            Alert.alert('Error', error?.response?.data?.message || 'Gagal memvalidasi voucher');
+            handleHttpError(error);
         } finally {
             setIsLoading(false);
         }
