@@ -1,10 +1,12 @@
 import { Skeleton } from '@/components/atoms/skeleton';
 import { NoData } from '@/components/molecules/no-data';
+import { FilterKlaimData, FilterKlaimModal } from '@/components/organisms/filter-klaim-modal';
 import { useTheme } from '@/hooks/useTheme';
 import { axiosInstance } from '@/lib/axiosInstance';
 import { formatDate, formatDateTime } from '@/utils/date';
 import { Feather } from '@expo/vector-icons';
 import { useQuery } from '@tanstack/react-query';
+import { format } from 'date-fns';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import { FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
@@ -23,28 +25,56 @@ const STATUS_TABS = [
 const getBadgeStyles = (status: string) => {
     switch (status) {
         case 'REQUESTED':
-            return { bg: '#FFF5E5', text: '#E69526' };
+            return { bg: '#FFF6E7', text: '#D88500' };
         case 'APPROVED':
+            return { bg: '#EAFFEB', text: '#118518' };
         case 'FINISHED':
+            return { bg: '#F2E7FF', text: '#6100D8' };
         case 'SHIPPED_TO_SHOP':
+            return { bg: '#EAEAEA', text: '#646464' };
         case 'SHIPPED_TO_WAREHOUSE':
-            return { bg: '#E6F8EB', text: '#00A63F' };
+            return { bg: '#E8E9EB', text: '#19253F' };
         case 'REJECTED':
         case 'CANCELED':
-            return { bg: '#FDEBEC', text: '#E62129' };
+            return { bg: '#FFE8E9', text: '#ED1B24' };
         default:
-            return { bg: '#EBF6FC', text: '#2888D1' };
+            return { bg: '#E7F3FF', text: '#006CD8' };
     }
 };
 
 export default function StatusKlaimScreen() {
     const { colors, isDarkMode } = useTheme();
     const [activeTab, setActiveTab] = useState(STATUS_TABS[0]);
+    const [isFilterVisible, setIsFilterVisible] = useState(false);
+    const [filterData, setFilterData] = useState<FilterKlaimData | undefined>(undefined);
 
     const { data: claims, isLoading } = useQuery({
-        queryKey: ['warranty-claims', activeTab.value],
+        queryKey: ['warranty-claims', activeTab.value, filterData],
         queryFn: async () => {
-            const { data } = await axiosInstance.get(`/api/mobile/v1/warranty-claims?status=${activeTab.value}`);
+            const params: Record<string, string> = {
+                status: activeTab.value
+            };
+
+            if (filterData) {
+                if (filterData.claimNo) {
+                    params['claimNo'] = filterData.claimNo;
+                }
+                if (filterData.couponCode) {
+                    params['voucherCode'] = filterData.couponCode;
+                }
+                if (filterData.type) {
+                    params['type'] = filterData.type === 'Toko' ? 'SHOP' : (filterData.type === 'Pembeli' ? 'BUYER' : filterData.type);
+                }
+                if (filterData.startDate) {
+                    params['startDate'] = format(filterData.startDate, 'yyyy-MM-dd');
+                }
+                if (filterData.endDate) {
+                    params['endDate'] = format(filterData.endDate, 'yyyy-MM-dd');
+                }
+            }
+
+            const queryString = new URLSearchParams(params).toString();
+            const { data } = await axiosInstance.get(`/api/mobile/v1/warranty-claims?${queryString}`);
             return data?.data || data || [];
         }
     });
@@ -52,7 +82,11 @@ export default function StatusKlaimScreen() {
     const renderCard = ({ item }: { item: any }) => {
         const badgeStyle = getBadgeStyles(activeTab.value);
         return (
-            <View style={[styles.card, { backgroundColor: colors.background, borderColor: isDarkMode ? colors.backgroundElement : '#EAEAEA' }]}>
+            <TouchableOpacity
+                activeOpacity={0.7}
+                onPress={() => router.push(`/status-klaim/${item.id}`)}
+                style={[styles.card, { backgroundColor: colors.background, borderColor: isDarkMode ? colors.backgroundElement : '#EAEAEA' }]}
+            >
                 {/* Header Card */}
                 <View style={styles.cardHeader}>
                     <Text style={[styles.dateText, { color: colors.textSecondary }]}>
@@ -71,7 +105,7 @@ export default function StatusKlaimScreen() {
 
                 <View style={styles.categoryRow}>
                     <Text style={styles.categoryTitle}>E-MOTOR</Text>
-                    <Text style={[styles.ownerText, { color: colors.textSecondary }]}>{item.submitByType == "BRANCH" ? "Cabang" : "Pembeli"}</Text>
+                    <Text style={[styles.ownerText, { color: colors.textSecondary }]}>{item.submitByType == "SHOP" ? "Toko" : "Pembeli"}</Text>
                 </View>
 
                 <Text style={[styles.frameNumber, { color: colors.text }]}>{item.frameNo || '-'}</Text>
@@ -90,7 +124,7 @@ export default function StatusKlaimScreen() {
                         <Text style={[styles.detailValue, { color: colors.text }]}>{formatDateTime(item.expiredDatetime)}</Text>
                     </View>
                 </View>
-            </View>
+            </TouchableOpacity>
         );
     };
 
@@ -104,7 +138,7 @@ export default function StatusKlaimScreen() {
                     </TouchableOpacity>
                     <Text style={[styles.headerTitle, { color: colors.text }]}>Status Klaim</Text>
                 </View>
-                <TouchableOpacity style={[styles.filterBtn, { borderColor: isDarkMode ? '#444' : '#EAEAEA' }]}>
+                <TouchableOpacity style={[styles.filterBtn, { borderColor: isDarkMode ? '#444' : '#EAEAEA' }]} onPress={() => setIsFilterVisible(true)}>
                     <Feather name="filter" size={16} color={colors.text} />
                     <Text style={[styles.filterBtnText, { color: colors.text }]}>Filter</Text>
                 </TouchableOpacity>
@@ -178,6 +212,15 @@ export default function StatusKlaimScreen() {
                     />
                 )}
             </View>
+
+            <FilterKlaimModal
+                visible={isFilterVisible}
+                onClose={() => setIsFilterVisible(false)}
+                onApply={(data) => {
+                    setFilterData(data);
+                }}
+                initialData={filterData}
+            />
         </SafeAreaView>
     );
 }

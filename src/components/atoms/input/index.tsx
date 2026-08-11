@@ -32,7 +32,7 @@ export const Input: React.FC<InputProps> = ({
             )}
             <View style={[
                 styles.inputWrapper, 
-                { backgroundColor: colors.backgroundElement, borderColor: isDarkMode ? colors.backgroundElement : '#EAEAEA' },
+                { backgroundColor: isDarkMode ? colors.backgroundElement : '#FFFFFF', borderColor: isDarkMode ? colors.backgroundElement : '#EAEAEA' },
                 !!error && styles.inputError, 
                 inputWrapperStyle
             ]}>
